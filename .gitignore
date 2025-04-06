@@ -2,3 +2,4 @@ node_modules
 process.env
 serve
 yapılıcaklar.txt
+.gitignore
