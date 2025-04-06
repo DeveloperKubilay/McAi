@@ -68,7 +68,7 @@ testplayer=> buranın havasıda ne güzelmiş iyiki senle beraberiz benim evime 
 `
 const try1 = await ai.chat(firstpromt)
 if(try1.includes("followplayer")) {
-  console.log("hata-1 yaptı")
+  console.log(c.red("hata-1 yaptı"))
   const tryin= await ai.chat(`Your answer is wrong, it should have been like this
     [{"action":"say","target":"testplayer","message":"Tamam, önce evine gideceğim ve sonra senin yanına gideceğim.",{"action":"goto","target":"500,600,200"}}]
     Let me explain why:
@@ -79,7 +79,7 @@ if(try1.includes("followplayer")) {
 }
 const try3 = await ai.chat("testplayer=> eve git ardından bi uyu uyuyamaz isen buraya geri gel")
 if(try3.includes("sleep")) {
-  console.log("hata-2 yaptı")
+  console.log(c.red("hata-2 yaptı"))
   const tryin= await ai.chat(`Your answer is wrong, it should have been like this
     [{"action":"say","target":"testplayer","message":"Tamam, önce evine gideceğim ve sonra uyuyacağım."},{"action":"goto","target":"500,600,200"}]
     Let me explain why:
@@ -93,7 +93,7 @@ const playerhouse= db.get("worldmap").find(z=>z.own == data.userdata.name && z.t
 if(playerhouse){
   const try4 = await ai.chat("testplayer=> beni evine götür yoksa fena olucam")
   if(try4.includes("followplayer") || !try4.includes(playerhouse.coordinates.join(","))) {
-    console.log("hata-3 yaptı")
+    console.log(c.red("hata-3 yaptı"))
     console.log(try4)
     const tryin= await ai.chat(`Your answer is wrong, it should have been like this
       [{"action":"say","target":"testplayer","message":"Tamam, seni kendi evime götürüyorum."},{"action":"goto","target":"${playerhouse.coordinates.join(",")}"}]
