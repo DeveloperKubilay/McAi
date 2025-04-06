@@ -50,8 +50,8 @@ module.exports = async function() {
             nearbyMobs.sort((a, b) => a.distance - b.distance);
         
         promt += `System:\n` +
-                 `- Day/Night: ${bot.time.isDay ? "Day" : "Night"}, Time: ${bot.time.timeOfDay}\n` +
-                 `- ur Coordinates: ${bot.entity.position}, ur Health: ${bot.health}, ur Food: ${bot.food}\n` +
+                 `- Day/Night: ${bot.time.isDay ? "Day" : "Night"} ${bot.isRaining ? "Raining" : ""}, Time: ${bot.time.timeOfDay}\n` +
+                 `- your Coordinates: ${bot.entity.position}, your Health: ${bot.health}, your Food: ${bot.food}\n` +
                  `- Nearby Mobs: [${nearbyMobs.map(mob => 
                      `{${mob.name},${Math.round(mob.distance)}m,${Math.round(mob.position.x)},${Math.round(mob.position.y)},${Math.round(mob.position.z)}}`
                  ).join(', ')+"\n" || ''}\n`;
