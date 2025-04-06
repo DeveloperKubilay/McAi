@@ -37,7 +37,7 @@
       ]
     },
     {
-      "type":"house",
+      "type": "house",
       "own": "ahmet",
       "coordinates": [
         425,
@@ -49,6 +49,8 @@
   "myrecords": [
     "She is the King",
     "She is the King",
-    "Valancess lamalardan korkuyor."
+    "Valancess lamalardan korkuyor.",
+    "Majestelerinin emri üzerine yarına 10.000 stack odun toplayacağım.",
+    "Majestelerinin emri üzerine yarına 10.000 stack odun toplayacağım."
   ]
 }

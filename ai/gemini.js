@@ -55,6 +55,11 @@ module.exports = {
   chat: async function(data) {
     fs.appendFileSync("log.txt", data + "\n")
     if(!socket) await this.createnewchat();
-    return await (await socket.sendMessage(data)).response.text()  
+    try {
+      return await (await socket.sendMessage(data)).response.text();
+    } catch (error) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return await (await socket.sendMessage(data)).response.text();
+    }
   }
 }

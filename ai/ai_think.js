@@ -10,7 +10,8 @@ module.exports = async function (data) {
 - Single Action: [{"action":"<action>","target":"<target>","message":"<message>"}]
 - Multiple Actions: [{"action":"<action>","target":"<target>","message":"<message>"},{"action":"<action>","target":"<target>","message":"<message>"}]
 
-Don't make such a mistake again and say what you mean in json
+Don't make such a mistake again and say what you mean in json !c
+Don't write me a message, just write Json, don't write I got it now !
 `)
 console.log(chat)
 await ai.think(chat)
@@ -35,8 +36,13 @@ await ai.think(chat)
             try{
                 await bot.sleep(bed);
             }catch{
+                if(!bot.isRaining && bot.time.isDay) {
+                    const response = await ai.chat("System:what are you doing it's morning and it's not raining you can't sleep according to minecraft rules be careful not to make mistakes (Don't use the count command between you and me).");
+                    await ai.think(response);
+                }else{
                 const response = await ai.chat(global.botname + ": Yanımda canavarlar var veya yatak dolu bilmiyorum bir sebepten uyuyamadım");
                 await ai.think(response);
+              }
             }
         }else {
             const response = await ai.chat(global.botname + ": yatak yokmuş");

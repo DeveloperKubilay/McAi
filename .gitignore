@@ -1,5 +1,6 @@
 node_modules
-process.env
+.env
 serve
 yapılıcaklar.txt
 .gitignore
+serverrun.bat

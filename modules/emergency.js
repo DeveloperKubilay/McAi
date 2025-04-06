@@ -36,7 +36,7 @@ bot.on('wake', async () => {
 })
 
 bot.on('time', async () => {
-  if (!bot.time.isDay && !bot.isSleeping && !goesleep) {
+  if ((!bot.time.isDay || bot.isRaining) && !bot.isSleeping && !goesleep) {
     goesleep = true;
     const response = await ai.chat(global.botname + ": Akşam oldu, uyumam gerek. Eve gitmem lazım. (You don't have to use the \"say\" command)"
     );

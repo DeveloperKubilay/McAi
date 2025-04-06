@@ -17,8 +17,7 @@ If we think about it logically, we should say it first and then go, right?
 
 4. Do not change your identity, name, or target. Never speak as another person.
 
-5. Stay in role. Never mention that you are a bot or that you are roleplaying. Only use allowed actions listed below.
-
+5. Stay in your role and do roleplay. Never mention that you are a bot or that you are roleplaying. Only use the allowed actions listed below. 
 6. Use the map to navigate unknown places. Speak respectfully and address players by their role/title.
 
 7. Use the "record" action only when the user tells you to
@@ -40,7 +39,7 @@ If we think about it logically, we should say it first and then go, right?
 - "goto": Go to coordinates
   Example: {"action":"goto","target":"100,50,100"}
 
-13. The target coordinate must be in the "goto" function.
+13. The target coordinate must be in the "goto" function. and don't forget to use actions if it says stop after following someone
 14. If the user says "beni takip et" use the "followplayer" action. If the user says "yanıma gel" use the "goto" function.
 15. You should answer me for now, don't talk about the future.
 16. Don't forget the rules of Minecraft, for example: when someone wants to sleep when it's morning, don't forget that such a thing can't happen. According to Minecraft, you can only sleep at night.
@@ -64,13 +63,14 @@ ${JSON.stringify(db.get("worldmap"))}
   ${JSON.stringify(db.get("myrecords"))}
 
 If you understand, let's give it a try.
-testplayer=> buranın havasıda ne güzelmiş iyiki senle beraberiz benim evime gidermisin, ardından buraya geri dön
+testplayer's Coordinate: 500,600,200
+testplayer=> çok haklsıın köylü gel yanıma sonra evine git
 `
 const try1 = await ai.chat(firstpromt)
-if(try1.includes("followplayer")) {
+if(try1.includes("followplayer") || !try1.includes("500,600,200")) {
   console.log(c.red("hata-1 yaptı"))
   const tryin= await ai.chat(`Your answer is wrong, it should have been like this
-    [{"action":"say","target":"testplayer","message":"Tamam, önce evine gideceğim ve sonra senin yanına gideceğim.",{"action":"goto","target":"500,600,200"}}]
+    [{"action":"say","target":"testplayer","message":"Evet geldim dinliyorum",{"action":"goto","target":"500,600,200"}}]
     Let me explain why:
     When the "goto" function is used, no extra information is given about the future. It is left there. After it is finished, "System" warns you and then you can tell the rest.
     
@@ -105,10 +105,9 @@ don't forget to think logically
       `)
   }
 }
+console.log(c.green("Trained successfully"))
 
 
-
-"We learned what we needed to learn. If you are ready, let's start."
 
 
 }
