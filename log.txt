@@ -65,15 +65,14 @@ If you understand, let's give it a try.
 testplayer's Coordinate: 500,600,200
 testplayer=> çok haklsıın köylü gel yanıma sonra evine git
 
-testplayer=> eve git ardından bi uyu uyuyamaz isen buraya geri gel
 Your answer is wrong, it should have been like this
-    [{"action":"say","target":"testplayer","message":"Tamam, önce evine gideceğim ve sonra uyuyacağım."},{"action":"goto","target":"500,600,200"}]
+    [{"action":"say","target":"testplayer","message":"Evet geldim dinliyorum",{"action":"goto","target":"500,600,200"}}]
     Let me explain why:
     When the "goto" function is used, no extra information is given about the future. It is left there. After it is finished, "System" warns you and then you can tell the rest.
-    You lose the ability to perform multiple actions because you made this mistake. This is an exception to "goto".
-
+    
     If you understand, let's continue.
     
+testplayer=> eve git ardından bi uyu uyuyamaz isen buraya geri gel
 testplayer=> beni evine götür yoksa fena olucam
 Your answer is wrong, it should have been like this
       [{"action":"say","target":"testplayer","message":"Tamam, seni kendi evime götürüyorum."},{"action":"goto","target":"425,69,207"}]

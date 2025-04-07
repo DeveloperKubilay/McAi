@@ -92,9 +92,10 @@ bot.on('playerCollect', (collector, collected) => {
     bot.chat(`${collector.username !== bot.username ? ("I'm so jealous. " + collector.username) : 'I '} collected ${item.count} ${item.displayName}`)
   }
 })
-bot.on('playerEat', (player) => {
-  if (player.username === bot.username) return
-  bot.chat(`${player.username} just ate something.`)
+bot.on('entityEat', (entity) => {
+  if (entity.type === 'player' && entity.username !== bot.username) {
+    bot.chat(`${entity.username} just ate something.`)
+  }
 })
 
 bot.on('entityHurt', (entity) => {
