@@ -29,6 +29,7 @@ var aitype = "gemini"
 const userdata = db.get("players").find(z=>z.name == botname.toLowerCase()) 
 if(!userdata) return console.log("User not found in db"),process.exit(1);
 userdata.inventory = JSON.stringify(globalg.getinv() || [])
+userdata.equipment = JSON.stringify(globalg.getmyeq() || [])
 
 global.ai = await require("./ai/ai_base.js")({
   type: aitype,

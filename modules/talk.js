@@ -1,4 +1,9 @@
 module.exports = async function() {
+
+    bot.on('whisper', (username, message, rawMessage) => {
+        console.log(`I received a message from ${username}: ${message}`)
+        bot.whisper(username, 'I can tell secrets too.')
+      })
     bot.on("chat", async (username, message) => {
         if (username === bot.username) return;
             var promt = ""
@@ -28,7 +33,8 @@ module.exports = async function() {
                     changed.forEach((item) => promt += `(${item.type}: ${item.name || 'removed'})`);
                     promt+= `\n`;
                 }
-                promt+= username + "'s Coordinate: " + bot.players[username].entity.position +"\n"
+                promt+= username + "'s Coordinate: " + bot.players[username].entity.position 
+                +`\n`;
     
             } else if(!message.includes(bot.username)) return;
 
