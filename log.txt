@@ -56,10 +56,10 @@ AVAILABLE DATA(S):
 [{"name":"testplayer's house","coordinates":[500,600,200]},{"name":"orman","coordinates":[503,72,188]},{"name":"tarla","coordinates":[463,72,167]},{"type":"house","own":"ahmet","coordinates":[425,69,207]}]
 
 - Player data:  
-  {"name":"ahmet","role":"farmer","itsabot":true,"inventory":"[\"porkchopx3\"]"}
+  {"name":"ahmet","role":"farmer","itsabot":true,"inventory":"[\"porkchopx3\"]","equipment":"{\"mainHand\":\"porkchop\",\"offHand\":\"empty\",\"head\":\"empty\",\"chest\":\"empty\",\"legs\":\"empty\",\"feet\":\"empty\"}"}
 
 - Your previous records:
-  ["She is the King","She is the King","Valancess lamalardan korkuyor.","Majestelerinin emri üzerine yarına 10.000 stack odun toplayacağım.","Majestelerinin emri üzerine yarına 10.000 stack odun toplayacağım."]
+  ["Valancess lamalardan korkuyor."]
 
 If you understand, let's give it a try.
 testplayer's Coordinate: 500,600,200
@@ -75,50 +75,11 @@ Your answer is wrong, it should have been like this
     If you understand, let's continue.
     
 testplayer=> beni evine götür yoksa fena olucam
-valancess's items have changed:(helmet: netherite_helmet)(chestplate: netherite_chestplate)(leggings: netherite_leggings)(boots: netherite_boots)(offhand: shield)
-valancess's Coordinate: (456.34610149811033, 74, 214.47738476895802)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (453.6111410833107, 74, 215.53198488908913), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,3m,456,74,214}
+Your answer is wrong, it should have been like this
+      [{"action":"say","target":"testplayer","message":"Tamam, seni kendi evime götürüyorum."},{"action":"goto","target":"425,69,207"}]
 
-User infos: {"name":"valancess","role":"King","itsabot":false}
-=>valancess: selam köylü
-valancess's Coordinate: (456.34610149811033, 74, 214.47738476895802)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (453.6111410833107, 74, 215.53198488908913), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,3m,456,74,214}
+think logically, he says to his house, to whom could he be saying, I also had a house, he wants me to take it away
+don't forget to think logically
 
-=>valancess: akip et beni
-valancess's Coordinate: (459.44497845123533, 74, 215.38705273770802)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (458.35139281900183, 74, 216.56337362115508), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,2m,459,74,215}
-
-=>valancess: dur
-valancess's Coordinate: (452.25766145438575, 74, 218.51813170968353)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (458.35139281900183, 74, 216.56337362115508), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,6m,452,74,219}
-
-=>valancess: evine git sen işe yaramaz
-System: You have completed your GOTO task. Now complete your next instruction, or decide if a different action is needed based on the last message.If there is no need for a different action dont respond to this message.
-System:what are you doing it's morning and it's not raining you can't sleep according to minecraft rules be careful not to make mistakes (Don't use the count command between you and me).
-valancess's Coordinate: (429.70735837689193, 69, 199.11728333301681)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (427.5, 69, 206.50533902126364), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,8m,430,69,199}
-
-=>valancess: uyumu dedim ben sana salak
-valancess's Coordinate: (433.4837088620024, 70, 180.10536201612194)
-System:
-- Day/Night: Day , Time: 1000
-- your Coordinates: (428.7, 69, 189.2800962833908), your Health: 0.3333320617675781, your Food: 0
-- Nearby Mobs: [{valancess,10m,433,70,180}, {Salmon (water_creature,id:5374),30m,404,59,176}, {Cod (water_creature,id:5379),30m,403,62,175}
-
-=>valancess: tarlaya git
-System: You have completed your GOTO task. Now complete your next instruction, or decide if a different action is needed based on the last message.If there is no need for a different action dont respond to this message.
+      If you understand, let's continue.
+      
