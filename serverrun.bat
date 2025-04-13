@@ -1,0 +1,1 @@
+cd serve && java -jar Spigot-1.20.1.jar nogui && cd ..
