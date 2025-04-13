@@ -1,7 +1,6 @@
 require('dotenv').config();
 global.botname = process.env.BOTNAME || "Bot"
 
-
 async function start(){
 const mineflayer = require("mineflayer");
 const kubitdb = require("kubitdb");
