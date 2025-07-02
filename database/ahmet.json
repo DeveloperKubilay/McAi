@@ -1,0 +1,9 @@
+{
+  "players": [
+    {
+      "name": "ahmet",
+      "work": "farmer",
+      "itsabot": true
+    }
+  ]
+}

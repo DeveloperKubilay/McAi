@@ -5,7 +5,7 @@ const { GoalFollow, GoalNear } = require('mineflayer-pathfinder').goals
 var bot = null, ai = null
 
 module.exports = async function (...args) {
-    if (args[3] === true) {
+    if (args[4] === true) {
         [bot, ai] = args;
         bot.loadPlugin(pathfinder)
         const defaultMove = new Movements(bot)
@@ -18,8 +18,7 @@ module.exports = async function (...args) {
 
     if (add === "goto") {
         await bot.pathfinder.goto(new GoalNear(...username.split(","), 3)).catch(err => { });
-        const response = await ai.chat("System: You have completed your GOTO task. Now complete your next instruction, or decide if a different action is needed based on the last message.If there is no need for a different action dont respond to this message.");
-        await ai.think(response, { sayignore: true });
+        const response = await ai.chat("System: You have completed your GOTO task. Now complete your next instruction, or decide if a different action is needed based on the last message.If there is no need for a different action dont respond to this message.", { sayignore: true });
         return;
     }
     else if (add === "unfollow") return bot.pathfinder.setGoal(null);
@@ -32,8 +31,7 @@ module.exports = async function (...args) {
             return true;
         } catch (err) { success = false };
         if (!success) {
-            const response = await ai.chat("system: say I can't follow you, I don't see you!");
-            await ai.think(response, { sayignore: true });
+            await ai.chat("system: say I can't follow you, I don't see you!");
             return true;
         }
     }
