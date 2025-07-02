@@ -1,4 +1,5 @@
-module.exports = async function (bot, ai) {
+module.exports = async function (bot, ai, userdata, db) {
+    const ramdb = userdata.ramdb;
 
     bot.on('whisper', (username, message, rawMessage) => {
         console.log(`I received a message from ${username}: ${message}`)
@@ -71,7 +72,6 @@ module.exports = async function (bot, ai) {
         }
         promt += "=>" + username + ": " + message
 
-        const response = await ai.chat(promt);
-        await ai.think(response);
+        await ai.chat(promt);
     });
 }

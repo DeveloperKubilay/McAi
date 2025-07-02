@@ -4,6 +4,7 @@ global.c = require('ansi-colors');
 async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token = process.env.GEMINI_API_KEY) {
   const mineflayer = require("mineflayer");
   const kubitdb = require("kubitdb");
+  const fs = require("fs");
 
   //Database
   const db = new kubitdb("./database/" + botname + ".json");
@@ -25,15 +26,17 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
   userdata.name = botname;
   userdata.inventory = JSON.stringify(basicFunctions.getinv(bot) || [])
   userdata.equipment = JSON.stringify(basicFunctions.getmyeq(bot) || [])
+  userdata.ramdb = {}
 
-  const ai = await require("./ai/ai_base.js")({
-    type: model,
+  const ai = await require("./ai/ai_hub.js")({
+    type: model.split("_")[0],
+    modelname: model.split("_").slice(1).join("_"),
     userdata: userdata,
     token: token
   });
 
   fs.readdirSync("./modules/").forEach((file) => {
-    if (file.endsWith(".js")) require("./modules/" + file)(bot, ai, userdata, true);
+    if (file.endsWith(".js")) require("./modules/" + file)(bot, ai, userdata, db, true);
   });
 
 };

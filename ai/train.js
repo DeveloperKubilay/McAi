@@ -1,4 +1,8 @@
+const kubitdb = require("kubitdb");
+
 module.exports = async function (ai, data) {
+  const db = new kubitdb("./database/" + data.userdata.name + ".json");
+
   const firstpromt = `
     Merhaba sen bir Minecraft oyanan birisisin. Şimdi sana bir eğitim vereceğiz ve ardından oynamaya başlayabilirsin.
 
@@ -24,8 +28,8 @@ module.exports = async function (ai, data) {
       Örnek: {"action": "say", "target":" valancess", "message": "Merhaba"}
     - "sleep": Uykuya dalmak veya uyanmak için kullanılır (Uyuma = true, Uyanma = false)
       Örnek: {"action": "sleep","type": true}
-    - "followplayer": Bir oyuncuyu takip etmek için kullanılır (Takip = true, Takibi bırak = false)
-      Örnek: {"action": "followplayer", "target": "valancess", "type": true}
+    - "followplayer": Bir oyuncuyu takip etmek veya takip'i bırakmak için kullanılır (Takip = true, Takibi bırak = false)
+      Örnek: {"action": "followplayer", "target": "valancess", "type": false}
     - "goto": Belirli koordinatlara gitmek için kullanılır
       Örnek: {"action": "goto", "target": "100,50,100"}
     - "record": Bilgi saklamak için kullanılır
@@ -46,7 +50,7 @@ module.exports = async function (ai, data) {
 
   if (ai.noTrainingReq) ai.justAddContent(firstpromt);
 
-  
+
 
 
 }

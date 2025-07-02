@@ -1,7 +1,5 @@
-const { Type,GoogleGenAI } = require('@google/genai')
-const fs = require("fs")
+const { GoogleGenerativeAI } = require('@google/generative-ai')
 var socket;
-
 
 const objectivePrompt = {
   "type": "array",
@@ -42,50 +40,23 @@ const objectivePrompt = {
   }
 }
 
-
 const config = {
-  thinkingConfig: {
-    thinkingBudget: 0,
-  },
   responseMimeType: 'application/json',
-  responseSchema: {
-    type: Type.ARRAY,
-    items: {
-      type: Type.OBJECT,
-      required: ["action", "target"],
-      properties: {
-        action: {
-          type: Type.STRING,
-          enum: ["say", "goto", "sleep", "followplayer", "give", "record"],
-        },
-        target: {
-          type: Type.STRING,
-        },
-        type: {
-          type: Type.BOOLEAN,
-        },
-        item: {
-          type: Type.STRING,
-        },
-        amount: {
-          type: Type.INTEGER,
-        },
-        message: {
-          type: Type.STRING,
-        },
-      },
-    },
-  },
+  responseSchema: objectivePrompt
 };
 
-
-module.exports = function (model) {
-  const contents = []
+module.exports = function (model,think) {
+  var contents = []
   return {
-    createnewchat: async function (token) {
-      if (!socket) socket = new GoogleGenAI({
-        apiKey: token
-      });
+    createNewChat: async function () {
+      if (!socket) {
+        const genAI = new GoogleGenerativeAI(model.token);
+        socket = genAI.getGenerativeModel({
+          model: model.modelname,
+          generationConfig: config
+        });
+        contents = []
+      }
     },
     justAddContent: function (data) {
       contents.push({
@@ -95,27 +66,25 @@ module.exports = function (model) {
         }]
       });
     },
-    chat: async function (data) {
+    chat: async function (data, params) {
       contents.push({
         role: 'user',
         parts: [{
           text: data
         }]
       });
-      if (!socket) await this.createnewchat();
+      if (!socket) await this.createNewChat();
       try {
-        return await (await ai.models.generateContent({
-          model,
-          config,
-          contents,
-        })).response.text();
+        const result = await socket.generateContent({
+          contents: contents
+        });
+        return await think(result.response.text(), params);
       } catch (error) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        return await (await ai.models.generateContent({
-          model,
-          config,
-          contents,
-        })).response.text();
+        const result = await socket.generateContent({
+          contents: contents
+        });
+        return await think(result.response.text(), params);
       }
     },
     noTrainingReq: true
