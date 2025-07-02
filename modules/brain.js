@@ -1,5 +1,5 @@
 const followSystem = require("./follow.js");
-const utils = require("./utils.js");
+const utils = require("./utils.js")();
 
 var bot = null, ai = null, db = null, userdata = null;
 
@@ -21,13 +21,15 @@ module.exports = async function (...args) {
     const action = item.action;
     console.log(item)
     if (action == "say" && !params.sayignore) {
-      bot.chat(item.message);
+      if(params.whisper) return await bot.whisper(params.whisper, item.message);
+      await bot.chat(item.message);
     } else if (action == "followplayer")
       followSystem(item.type, item.target);
     else if (action == "goto")
       followSystem("goto", item.target);
     else if (action == "record") db.push("myrecords", item.message);
-    else if (action == "sleep") utils.sleepSystem(item);
+    else if (action == "sleep") utils.sleep(item);
+    else if (action == "addplayer") utils.addPlayer(item.target, item.message);
   });
   console.log("----------------------------\n")
 

@@ -1,11 +1,10 @@
 module.exports = async function (bot, ai, userdata, db) {
     const ramdb = userdata.ramdb;
 
-    bot.on('whisper', (username, message, rawMessage) => {
-        console.log(`I received a message from ${username}: ${message}`)
-        bot.whisper(username, 'I can tell secrets too.')
-    })
-    bot.on("chat", async (username, message) => {
+    bot.on('whisper', (username, message) => msg(username, message, true));
+    bot.on("chat", (username, message) => msg(username, message));
+
+    async function msg(username, message, whisper = false) {
         if (username === bot.username) return;
         var promt = ""
         const playerEntity = bot.players[username]?.entity;
@@ -72,6 +71,7 @@ module.exports = async function (bot, ai, userdata, db) {
         }
         promt += "=>" + username + ": " + message
 
-        await ai.chat(promt);
-    });
+        await ai.chat(promt, { whisper: whisper ? username : false });
+    }
+
 }

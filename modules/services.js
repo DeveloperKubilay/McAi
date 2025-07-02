@@ -29,7 +29,7 @@ module.exports = async function (bot, ai, userdata) {
     const nearestPlayer = bot.nearestEntity(entity => entity.type === 'player' && bot.entity.position.distanceTo(entity.position) <= 30);
 
     const response = await ai.chat(userdata.name + `: Uyandım sabah oldu ${nearestPlayer ? nearestPlayer.name + " yanımda günaydınmı desem?"
-      : '(\"say\" komutunu kullanmak önerilmez)'} `);
+      : '(noresponse kullanmak önerilir)'} `);
     //  }
   })
 
@@ -37,7 +37,7 @@ module.exports = async function (bot, ai, userdata) {
     //bot.time.timeOfDay
     if ((!bot.time.isDay || bot.isRaining) && !bot.isSleeping && !goesleep) {
       goesleep = true;
-      await ai.chat(userdata.name + ": Akşam oldu, uyumam gerek. Eve gitmem lazım. (You don't have to use the \"say\" command)"
+      await ai.chat(userdata.name + ": Akşam oldu, uyumam gerek. Eve gitmem lazım. (eve gitmek ve noresponse kullanmak önerilir)"
       );
     }
   })

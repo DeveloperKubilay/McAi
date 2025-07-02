@@ -1,9 +1,8 @@
-var bot = null, ai = null, userdata = null;
+var bot = null, ai = null, userdata = null, db = null;
 
-
-module.exports = async function (...args) {
+module.exports = function (...args) {
     if (args[4] === true)
-        return [bot, ai, userdata] = args;
+        return [bot, ai, userdata, db] = args;
 
     return {
         sleep: async function (item) {
@@ -25,6 +24,18 @@ module.exports = async function (...args) {
                     await ai.chat(userdata.name + ": yatak yokmuş");
                 }
             } else { try { await bot.wake() } catch { } }
-        }
+        },
+        addPlayer: async function (name, message) {
+            db.set("players", db.get("players").filter(z=> z.name != name));
+            db.push("players", {
+                name: name,
+                message: message
+            });
+        },
+
+
+
+
+
     }
 }

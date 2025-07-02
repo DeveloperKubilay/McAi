@@ -18,10 +18,9 @@ module.exports = async function (...args) {
 
     if (add === "goto") {
         await bot.pathfinder.goto(new GoalNear(...username.split(","), 3)).catch(err => { });
-        const response = await ai.chat("System: You have completed your GOTO task. Now complete your next instruction, or decide if a different action is needed based on the last message.If there is no need for a different action dont respond to this message.", { sayignore: true });
-        return;
+        return await ai.chat("System: Evet gitmek istediğin yere geldin şimdi başka bir eylem yapmak istersen yap eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.");
     }
-    else if (add === "unfollow") return bot.pathfinder.setGoal(null);
+    else if (!add) return bot.pathfinder.setGoal(null);
     else {
         const target = bot.players[username.toLowerCase()] ? bot.players[username.toLowerCase()].entity : null
         var success = true

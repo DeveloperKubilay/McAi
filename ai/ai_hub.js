@@ -5,6 +5,7 @@ module.exports = async function(data) {
 
     await model.createNewChat();
     await trainer(model,data); 
+    console.log(data.userdata.name+" trained successfully");
 
     return model;
 }
