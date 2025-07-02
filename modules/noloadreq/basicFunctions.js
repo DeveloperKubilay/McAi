@@ -1,12 +1,12 @@
 module.exports = {
-  getinv: function() {
+  getinv: function(bot) {
     var inventoryArray = [];
     bot.inventory.items().forEach((item) => {
       inventoryArray.push(`${item.name}x${item.count}`);
     });
     return inventoryArray;
   },
-  getmyeq: function() {
+  getmyeq: function(bot) {
     const equipment = {
       mainHand: bot.heldItem ? bot.heldItem.name : 'empty',
       offHand: bot.inventory.slots[45] ? bot.inventory.slots[45].name : 'empty',

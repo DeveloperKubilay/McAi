@@ -1,13 +1,7 @@
-module.exports = function() {
+module.exports = function(botname,db) {
     db.set("players",[{
-        "name": "valancess",
-        "work": "The King",
-        "itsabot":false
-    },{
         "name": botname,
         "work": "farmer",
         "itsabot":true
     }])
-
-
 }

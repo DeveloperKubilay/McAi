@@ -1,4 +1,4 @@
-const { GoogleGenAI } = require('@google/genai')
+const { Type,GoogleGenAI } = require('@google/genai')
 const fs = require("fs")
 var socket;
 
@@ -40,7 +40,7 @@ const objectivePrompt = {
       "target"
     ]
   }
-};
+}
 
 
 const config = {
