@@ -2,8 +2,12 @@
   "players": [
     {
       "name": "ahmet",
-      "work": "farmer",
-      "itsabot": true
+      "message": "Demirci"
+    },
+    {
+      "name": "valancess",
+      "message": "arkadaş"
     }
-  ]
+  ],
+  "myrecords": []
 }

@@ -14,7 +14,9 @@ const objectivePrompt = {
           "sleep",
           "followplayer",
           "give",
-          "record"
+          "record",
+          "noresponse",
+          "addplayer"
         ]
       },
       "target": {
