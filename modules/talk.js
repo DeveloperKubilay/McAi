@@ -41,6 +41,7 @@ module.exports = async function (bot, ai, userdata, db) {
         const nearbyMobs = [];
         const maxDistance = 30;
         const botPos = bot.entity.position;
+        console.log(botPos);
 
         for (const entity of Object.values(bot.entities)) {
             const distance = entity.position.distanceTo(botPos);
@@ -57,7 +58,9 @@ module.exports = async function (bot, ai, userdata, db) {
 
         promt += `System:\n` +
             `- Day/Night: ${bot.time.isDay ? "Day" : "Night"} ${bot.isRaining ? "Raining" : ""}, Time: ${bot.time.timeOfDay}\n` +
-            `- your Coordinates: ${bot.entity.position}, your Health: ${bot.health}, your Food: ${bot.food}\n` +
+            `- Your Coordinates: ${bot.entity.position}, Your Health: ${bot.health}, Your Food: ${bot.food}\n` +
+            "- Your Inventory: " + (userdata.inventory || "[]") + "\n" +
+            "- Your Equipment: " + (userdata.equipment || "[]") + "\n" +
             `- Nearby Mobs: [${nearbyMobs.map(mob =>
                 `{${mob.name},${Math.round(mob.distance)}m,${Math.round(mob.position.x)},${Math.round(mob.position.y)},${Math.round(mob.position.z)}}`
             ).join(', ') + "\n" || ''}\n`;

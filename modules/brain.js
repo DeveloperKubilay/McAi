@@ -20,6 +20,10 @@ module.exports = async function (...args) {
   json.forEach(async function (item) {
     const action = item.action;
     console.log(item)
+    if (action == "give") {
+      utils.give(item.target, item.item, item.amount || 1);
+      if(item.message) item = { action: "say", target: item.target, message: item.message };
+    }
     if (action == "say" && !params.sayignore) {
       if(params.whisper) return await bot.whisper(params.whisper, item.message);
       await bot.chat(item.message);
