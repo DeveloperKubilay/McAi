@@ -8,7 +8,8 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
 
   //Database
   const db = new kubitdb("./database/" + botname + ".json");
-  if (!db.has("players")) require("./modules/noloadreq/dbsetup.js")(botname, db);
+  var itsanewbot = false;
+  if (!db.has("players")) itsanewbot=true, require("./modules/noloadreq/dbsetup.js")(botname, db);
   const basicFunctions = require("./modules/noloadreq/basicFunctions.js")
 
   const bot = mineflayer.createBot({
@@ -27,6 +28,7 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
   userdata.inventory = JSON.stringify(basicFunctions.getinv(bot) || [])
   userdata.equipment = JSON.stringify(basicFunctions.getmyeq(bot) || [])
   userdata.ramdb = {}
+  userdata.newbot = itsanewbot;
 
   const ai = await require("./ai/ai_hub.js")({
     type: model.split("_")[0],
