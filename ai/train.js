@@ -24,23 +24,30 @@ module.exports = async function (ai, data) {
     Örnek kullanımlar:
     - "say": Birisine konuşmak için kullanılır
       Örnek: {"action": "say", "target":"testplayer", "message": "Merhaba"}
+
     - "sleep": Uykuya dalmak veya uyanmak için kullanılır (Uyuma = true, Uyanma = false)
       Örnek: {"action": "sleep","type": true}
+
     - "followplayer": Bir oyuncuyu takip etmek veya takip'i bırakmak için kullanılır (Takip = true, Takibi bırak = false)
       Örnek: {"action": "followplayer", "target": "testplayer", "type": false}
+
     - "goto": Belirli koordinatlara gitmek için kullanılır
       Örnek: {"action": "goto", "target": "100,50,100"}
+
     - "record": Bilgi saklamak için kullanılır (Unutma) gereksiz şeyler için kullanma eğer kullanıcı sana unutma dediyse kullanabilirsin
       Örnek: {"action": "record", "message": "Evden çıkmadan önce bir kürek almalıyım"}
+
     - "noresponse": Cevap vermek istemiyorsan bu komutu kullanabilirsin
+
     - "addplayer": Oyuncu verilerinde olmayan birisi ile tanıştığında kim olduğunu öğrendikten sonra kullanılır
       Örnek: {"action": "addplayer", "target": "testplayer", "message": "Kralımız"}
+
+    - "give": Bir oyuncuya bir eşya vermek için kullanılır
+      Örnek: {"action": "give", "target": "testplayer", "item": "apple", "amount": 5}
 
     Kullanılabilir bilgiler:
     - Dünya haritası:  
     ${JSON.stringify(db.get("worldmap"))}
-    - Oyuncu verileri:  
-      ${JSON.stringify(data.userdata)}
     - Önceki kayıtlarınız:
       ${JSON.stringify(db.get("myrecords"))}
 
@@ -48,7 +55,7 @@ module.exports = async function (ai, data) {
   `;
 
   if (ai.noTrainingReq) ai.justAddContent(firstpromt);
-
+  // await ai.chat(firstpromt, { sayignore: true})
 
 
 

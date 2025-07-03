@@ -26,12 +26,26 @@ module.exports = function (...args) {
             } else { try { await bot.wake() } catch { } }
         },
         addPlayer: async function (name, message) {
-            db.set("players", db.get("players").filter(z=> z.name != name));
+            db.set("players", db.get("players").filter(z => z.name != name));
             db.push("players", {
                 name: name,
                 message: message
             });
         },
+        give: async function (target, item, amount = 1) {
+            const nearestPlayer = bot.nearestEntity(entity => entity.type === 'player' && bot.entity.position.distanceTo(entity.position) <= 30 && entity.username === target);
+            if (!nearestPlayer) return await ai.chat("System: Kullanıcı yakınında değil, yanına gelmesini ardından atabileceğini söyleyebilirsin.");
+            bot.lookAt(nearestPlayer.position.offset(0, 1.6, 0));
+
+            const itemType = bot.registry.itemsByName[item.split(" ").join("_").toLowerCase()];
+            if (!itemType) return await ai.chat("System: I don't know this item, please check the item name.");
+            const itemCount = bot.inventory.count(itemType.id);
+            if (itemCount >= amount) {
+                await bot.toss(itemType.id, null, amount);
+            } else {
+                return await ai.chat(userdata.name + ": Yeterli " + item + " yok elimde");
+            }
+        }
 
 
 

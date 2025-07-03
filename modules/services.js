@@ -1,5 +1,4 @@
 module.exports = async function (bot, ai, userdata) {
-
   var amiinwater = false;
   var goesleep = false;
 
@@ -26,6 +25,12 @@ module.exports = async function (bot, ai, userdata) {
   setInterval(async () => {
     text = "";
     Object.entries(logs).forEach(([name, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(item => {
+          text += `${item}\n`;
+        });
+        return;
+      }
       text += `${value}\n`;
     })
     if (!text) return;
@@ -98,8 +103,8 @@ module.exports = async function (bot, ai, userdata) {
   bot.on('playerCollect', (collector, collected) => {
     if (collector.type === 'player') {
       const item = collected.getDroppedItem()
-      logs[7] = `${collector.username} topladı ${item.count} adet ${item.displayName}`;
-      bot.chat(`${collector.username !== bot.username ? ("I'm so jealous. " + collector.username) : 'I '} collected ${item.count} ${item.displayName}`)
+      if(!logs[7]) logs[7] = [];
+      logs[7].push(`${collector.username} topladı ${item.count} adet ${item.displayName}`);
     }
   })
   bot.on('entityEat', (entity) => {
@@ -107,12 +112,12 @@ module.exports = async function (bot, ai, userdata) {
       logs[8] = `${entity.username} bir şey yedi. sesini duydum.`;
     }
   })
-
   bot.on('entityHurt', (entity) => {
+    if(!logs[9]) logs[9] = [];
     if (entity.type === 'mob') {
-      logs[9] = `Bir ${entity.displayName} hasar aldı.`;
+      logs[9].push(`Bir ${entity.displayName} hasar aldı.`);
     } else if (entity.type === 'player') {
-      logs[9] = `${entity.username} hasar aldı.`;
+      logs[9].push(`${entity.username} hasar aldı.`);
     }
   })
   bot.on('entityCrouch', (entity) => {
