@@ -21,124 +21,104 @@ module.exports = async function (bot, ai, userdata) {
     }
   }, 100)
 
-  bot.on('wake', async () => {
+  ///Services 
+  var logs = {}
+  setInterval(async () => {
+    text = "";
+    Object.entries(logs).forEach(([name, value]) => {
+      text += `${value}\n`;
+    })
+    if (!text) return;
+    text = "Oyun dünyasında olan bitenler:\n" + text;
+    console.log(text);
+    logs = {}
+    await ai.chat(text)
+  }, 2000)
 
+  bot.on('wake', async () => {
     /* if(!bot.time.isDay){
        const response = await ai.chat(userdata.name + ": Uyurken nedenini bilmiyorum ama kaldırıldım");
      }else{*/
     const nearestPlayer = bot.nearestEntity(entity => entity.type === 'player' && bot.entity.position.distanceTo(entity.position) <= 30);
 
-    const response = await ai.chat(userdata.name + `: Uyandım sabah oldu ${nearestPlayer ? nearestPlayer.name + " yanımda günaydınmı desem?"
-      : '(noresponse kullanmak önerilir)'} `);
+    const response = logs[0] = userdata.name + `: Uyandım sabah oldu ${nearestPlayer ? nearestPlayer.name + " yanımda günaydınmı desem?"
+      : '(noresponse kullanmak önerilir)'} `;
     //  }
   })
 
   bot.on('time', async () => {
-    //bot.time.timeOfDay
     if ((!bot.time.isDay || bot.isRaining) && !bot.isSleeping && !goesleep) {
       goesleep = true;
-      await ai.chat(userdata.name + ": Akşam oldu, uyumam gerek. Eve gitmem lazım. (eve gitmek ve noresponse kullanmak önerilir)"
-      );
+      logs[6] = userdata.name + ": Güneş batıyor, uyumam gerek. (eve gitmek ve noresponse kullanmak önerilir)";
     }
   })
 
-  ///Services 
 
-  bot.on('spawn', () => {
-    bot.chat('I spawned, watch out!')
-  })
   bot.on('spawnReset', (message) => {
-    bot.chat('Oh noez! My bed is broken.')
+    logs[1] = userdata.name + `: Spawn noktam sıfırlandı. galiba yatağım kırıldı (noresponse kullanmak önerilir)`;
   })
   bot.on('forcedMove', () => {
-    bot.chat(`I have been forced to move to ${bot.entity.position}`)
+    logs[1] = userdata.name + ": Birisi beni zorla hareket ettirdi. (noresponse kullanmak önerilir)";
+  })
+  bot.on('spawn', () => {
+    if (userdata.newbot)
+      logs[1] = userdata.name + ": Minecraft dünyasına yeni spawn oldum (noresponse kullanmak önerilir)";
+    else
+      logs[1] = userdata.name + ": Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)";
   })
   bot.on('health', () => {
-    bot.chat(`I have ${bot.health} health and ${bot.food} food`)
+    logs[2] = userdata.name + `: ${bot.health}/20 canım ve ${bot.food}/20 açlığım var.`;
   })
   bot.on('death', () => {
-    bot.chat('I died x.x')
+    logs[2] = userdata.name + ": Ben öldüm x.x";
   })
-  bot.on('kicked', (reason) => { console.log("I am kicked"); process.exit(1) })
+  bot.on('kicked', (reason) => { console.log("I am kicked"); })
   bot.on('rain', () => {
-    if (bot.isRaining) {
-      bot.chat('It started raining.')
-    } else {
-      bot.chat('It stopped raining.')
-    }
+    if (bot.isRaining) 
+      logs[3] = "Yağmur başladı.";
+    else 
+      logs[3] = "Yağmur durdu.";
   })
   bot.on('noteHeard', (block, instrument, pitch) => {
-    bot.chat(`Music for my ears! I just heard a ${instrument.name}`)
+    logs[4] = userdata.name + `: Bir nota duydum, enstrüman: ${instrument.name}, ton: ${pitch}`;
   })
   bot.on('chestLidMove', (block, isOpen) => {
     const action = isOpen ? 'open' : 'close'
-    bot.chat(`Hey, did someone just ${action} a chest?`)
+    logs[5] = `${userdata.name}: Bir sandığın kapağının ${action} olduğunu duydum.`;
   })
   bot.on('playerJoined', (player) => {
     if (player.username !== bot.username) {
-      bot.chat(`Hello, ${player.username}! Welcome to the server.`)
+      logs[6] = `${player.username} oyuna katıldı.`;
     }
   })
   bot.on('playerLeft', (player) => {
     if (player.username === bot.username) return
-    bot.chat(`Bye ${player.username}`)
+    logs[6] = `${player.username} oyundan ayrıldı. (noresponse kullanmak önerilir)`;
   })
   bot.on('playerCollect', (collector, collected) => {
     if (collector.type === 'player') {
       const item = collected.getDroppedItem()
+      logs[7] = `${collector.username} topladı ${item.count} adet ${item.displayName}`;
       bot.chat(`${collector.username !== bot.username ? ("I'm so jealous. " + collector.username) : 'I '} collected ${item.count} ${item.displayName}`)
     }
   })
   bot.on('entityEat', (entity) => {
     if (entity.type === 'player' && entity.username !== bot.username) {
-      bot.chat(`${entity.username} just ate something.`)
+      logs[8] = `${entity.username} bir şey yedi. sesini duydum.`;
     }
   })
 
   bot.on('entityHurt', (entity) => {
     if (entity.type === 'mob') {
-      bot.chat(`Haha! The ${entity.displayName} got hurt!`)
+      logs[9] = `Bir ${entity.displayName} hasar aldı.`;
     } else if (entity.type === 'player') {
-      bot.chat(`Aww, poor ${entity.username} got hurt. Maybe you shouldn't have a ping of ${bot.players[entity.username].ping}`)
+      logs[9] = `${entity.username} hasar aldı.`;
     }
-  })
-  bot.on('entitySwingArm', (entity) => {
-    bot.chat(`${entity.username}, I see that your arm is working fine.`)
   })
   bot.on('entityCrouch', (entity) => {
-    bot.chat(`${entity.username}: you so sneaky.`)
+    if (entity.username) logs[10] = `${entity.username} çömeldi.`;
   })
   bot.on('entityUncrouch', (entity) => {
-    bot.chat(`${entity.username}: welcome back from the land of hunchbacks.`)
+    if (entity.username) logs[10] = `${entity.username} çömelmeyi bıraktı.`;
   })
-  bot.on('entitySleep', (entity) => {
-    bot.chat(`Good night, ${entity.username}`)
-  })
-  bot.on('entityWake', (entity) => {
-    bot.chat(`Top of the morning, ${entity.username}`)
-  })
-  bot.on('entityEat', (entity) => {
-    bot.chat(`${entity.username}: OM NOM NOM NOMONOM. That's what you sound like.`)
-  })
-  bot.on('entityAttach', (entity, vehicle) => {
-    if (entity.type === 'player' && vehicle.type === 'object') {
-      bot.chat(`Sweet, ${entity.username} is riding that ${vehicle.displayName}`)
-    }
-  })
-  bot.on('entityDetach', (entity, vehicle) => {
-    if (entity.type === 'player' && vehicle.type === 'object') {
-      bot.chat(`Lame, ${entity.username} stopped riding the ${vehicle.displayName}`)
-    }
-  })
-  bot.on('entityEquipmentChange', (entity) => {
-    console.log('entityEquipmentChange', entity)
-  })
-  bot.on('entityEffect', (entity, effect) => {
-    console.log('entityEffect', entity, effect)
-  })
-  bot.on('entityEffectEnd', (entity, effect) => {
-    console.log('entityEffectEnd', entity, effect)
-  })
-
-
 }
