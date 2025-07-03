@@ -32,9 +32,6 @@ const objectivePrompt = {
       "item": {
         "type": "string"
       },
-      "amount": {
-        "type": "integer"
-      },
       "message": {
         "type": "string"
       }
@@ -47,9 +44,9 @@ const objectivePrompt = {
 }
 
 const config = {
-  thinkingConfig: {
+ /* thinkingConfig: {
     thinkingBudget: -1,
-  },
+  },*/
   responseMimeType: 'application/json',
   responseSchema: objectivePrompt
 };

@@ -1,5 +1,6 @@
 const followSystem = require("./follow.js");
 const utils = require("./utils.js")();
+const blocks = require("./blocks.js");
 
 var bot = null, ai = null, db = null, userdata = null;
 
@@ -20,10 +21,6 @@ module.exports = async function (...args) {
   json.forEach(async function (item) {
     const action = item.action;
     console.log(item)
-    if (action == "give") {
-      utils.give(item.target, item.item, item.amount || 1);
-      if(item.message) item = { action: "say", target: item.target, message: item.message };
-    }
     if (action == "say" && !params.sayignore) {
       if(params.whisper) return await bot.whisper(params.whisper, item.message);
       await bot.chat(item.message);
@@ -34,6 +31,8 @@ module.exports = async function (...args) {
     else if (action == "record") db.push("myrecords", item.message);
     else if (action == "sleep") utils.sleep(item);
     else if (action == "addplayer") utils.addPlayer(item.target, item.message);
+    else if (action == "give") utils.give(item.target, item.item, item.message.replace(/[^0-9]/g, "") || 1);
+    else if (action === "findBlock") blocks
   });
   console.log("----------------------------\n")
 

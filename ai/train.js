@@ -37,13 +37,13 @@ module.exports = async function (ai, data) {
     - "record": Bilgi saklamak için kullanılır (Unutma) gereksiz şeyler için kullanma eğer kullanıcı sana unutma dediyse kullanabilirsin
       Örnek: {"action": "record", "message": "Evden çıkmadan önce bir kürek almalıyım"}
 
-    - "noresponse": Cevap vermek istemiyorsan bu komutu kullanabilirsin
+    - "noresponse": Cevap vermek istemiyorsan bu komutu kullanabilirsin en kötü durumda bunu kullan
 
     - "addplayer": Oyuncu verilerinde olmayan birisi ile tanıştığında kim olduğunu öğrendikten sonra kullanılır
       Örnek: {"action": "addplayer", "target": "testplayer", "message": "Kralımız"}
 
     - "give": Bir oyuncuya bir eşya vermek için kullanılır
-      Örnek: {"action": "give", "target": "testplayer", "item": "apple", "amount": 5}
+      Örnek: {"action": "give", "target": "testplayer", "item": "apple", "message":"5x"}
 
     Kullanılabilir bilgiler:
     - Dünya haritası:  

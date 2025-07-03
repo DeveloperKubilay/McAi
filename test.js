@@ -14,45 +14,33 @@ async function main() {
     },
     responseMimeType: 'application/json',
     responseSchema: {
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "action": {
-        "type": "string",
-        "enum": [
-          "say",
-          "goto",
-          "sleep",
-          "followplayer",
-          "give",
-          "record",
-          "noresponse",
-          "addplayer"
-        ]
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        required: ["action", "target"],
+        properties: {
+          action: {
+            type: Type.STRING,
+            enum: ["say", "goto", "sleep", "followplayer", "give", "record", "noresponse", "addplayer"],
+          },
+          target: {
+            type: Type.STRING,
+          },
+          type: {
+            type: Type.BOOLEAN,
+          },
+          item: {
+            type: Type.STRING,
+          },
+          amount: {
+            type: Type.INTEGER,
+          },
+          message: {
+            type: Type.STRING,
+          },
+        },
       },
-      "target": {
-        "type": "string"
-      },
-      "type": {
-        "type": "boolean"
-      },
-      "item": {
-        "type": "string"
-      },
-      "amount": {
-        "type": "integer"
-      },
-      "message": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "action",
-      "target"
-    ]
-  }
-}
+    }
   };
   const model = 'gemini-2.5-flash';
   const contents = [
@@ -60,35 +48,11 @@ async function main() {
       role: 'user',
       parts: [
         {
-          text: `Merhaba sen bir Minecraft oyanan birisisin. Şimdi sana bir eğitim vereceğiz ve ardından oynamaya başlayabilirsin.
-    İsmin: ahmet
-
-
-    Örnek kullanımlar:
-    - "say": Birisine konuşmak için kullanılır
-      Örnek: {"action": "say", "target":"testplayer", "message": "Merhaba"}
-
-    - "sleep": Uykuya dalmak veya uyanmak için kullanılır (Uyuma = true, Uyanma = false)
-      Örnek: {"action": "sleep","type": true}
-
-    - "followplayer": Bir oyuncuyu takip etmek veya takip'i bırakmak için kullanılır (Takip = true, Takibi bırak = false)
-      Örnek: {"action": "followplayer", "target": "testplayer", "type": false}
-
-    - "goto": Belirli koordinatlara gitmek için kullanılır
-      Örnek: {"action": "goto", "target": "100,50,100"}
-
-    - "record": Bilgi saklamak için kullanılır (Unutma) gereksiz şeyler için kullanma eğer kullanıcı sana unutma dediyse kullanabilirsin
-      Örnek: {"action": "record", "message": "Evden çıkmadan önce bir kürek almalıyım"}
-
-    - "noresponse": Cevap vermek istemiyorsan bu komutu kullanabilirsin
-
-    - "addplayer": Oyuncu verilerinde olmayan birisi ile tanıştığında kim olduğunu öğrendikten sonra kullanılır
-      Örnek: {"action": "addplayer", "target": "testplayer", "message": "Kralımız"}
-
-    - "give": Bir oyuncuya bir eşya vermek için kullanılır
-      Örnek: {"action": "give", "target": "testplayer", "item": "Apple", "amount": 5}
-
-    Hadi başlayalım!`,
+          text: `"give": Bir oyuncuya bir item vermek için kullanılır.
+Eğer bir oyuncu senden bir şey isterse (örneğin buğday, elma, vb.) give komutu kullanmalısın.
+Give komutu şu şekilde olmalı: {"action": "give", "target": "oyuncu_adı", "item": "item_adı", "amount": miktar}
+Örnek: {"action": "give", "target": "testplayer", "item": "Apple", "message": "10x"}
+`,
         },
       ],
     },
@@ -96,7 +60,7 @@ async function main() {
       role: 'user',
       parts: [
         {
-          text: `5 buğday atsana`,
+          text: `5 buğday atsana valancess ismim`,
         },
       ],
     }
@@ -107,9 +71,30 @@ async function main() {
     config,
     contents,
   });
-  let fileIndex = 0;
+  
+  let fullResponse = '';
+  
   for await (const chunk of response) {
-    console.log(chunk.text);
+    fullResponse += chunk.text;
+    console.log("Gelen parça:", chunk.text);
+  }
+  
+  try {
+    // JSON yanıtı parse et
+    const parsedResponse = JSON.parse(fullResponse);
+    console.log("🔍 Parsed JSON:", parsedResponse);
+    
+    // Give komutu var mı kontrol et
+    const giveCommand = parsedResponse.find(cmd => cmd.action === "give");
+    if (giveCommand) {
+      console.log("✅ GIVE KOMUTU BULUNDU:", giveCommand);
+    } else {
+      console.log("❌ GIVE KOMUTU YOK! AI şu komutu döndürdü:");
+      console.log(parsedResponse);
+    }
+  } catch (error) {
+    console.error("💀 JSON parse hatası:", error.message);
+    console.log("Ham yanıt:", fullResponse);
   }
 }
 

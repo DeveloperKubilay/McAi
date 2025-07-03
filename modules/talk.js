@@ -41,7 +41,9 @@ module.exports = async function (bot, ai, userdata, db) {
         const nearbyMobs = [];
         const maxDistance = 30;
         const botPos = bot.entity.position;
-        console.log(botPos);
+        botPos.x = Math.round(botPos.x);
+        botPos.y = Math.round(botPos.y);
+        botPos.z = Math.round(botPos.z);
 
         for (const entity of Object.values(bot.entities)) {
             const distance = entity.position.distanceTo(botPos);
