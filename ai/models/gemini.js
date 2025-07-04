@@ -20,7 +20,8 @@ const objectivePrompt = {
           "give",
           "record",
           "noresponse",
-          "addplayer"
+          "addplayer",
+          "findBlock"
         ]
       },
       "target": {
