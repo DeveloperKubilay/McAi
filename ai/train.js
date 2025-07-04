@@ -45,6 +45,9 @@ module.exports = async function (ai, data) {
     - "give": Bir oyuncuya bir eşya vermek için kullanılır
       Örnek: {"action": "give", "target": "testplayer", "item": "apple", "message":"5x"}
 
+    - "findBlock": Belirli bir blok türünü bulmak için kullanılır
+    Örnek: {"action": "findBlock", "target": "stone"}
+
     Kullanılabilir bilgiler:
     - Dünya haritası:  
     ${JSON.stringify(db.get("worldmap"))}

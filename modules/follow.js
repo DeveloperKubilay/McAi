@@ -17,8 +17,19 @@ module.exports = async function (...args) {
     const [add, username] = args;
 
     if (add === "goto") {
-        await bot.pathfinder.goto(new GoalNear(...username.split(","), 3)).catch(err => { });
-        return await ai.chat("System: Evet gitmek istediğin yere geldin şimdi başka bir eylem yapmak istersen yap eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.");
+        const [x, y, z] = username.split(",").map(Number)
+        const currentGoal = bot.pathfinder.goal
+        if (
+            currentGoal &&
+            currentGoal.x === x &&
+            currentGoal.y === y &&
+            currentGoal.z === z
+        ) {
+            await ai.chat("Kanka zaten oradayım, başka bir yere gitmemi ister misin? 😎 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)");
+            return;
+        }
+        await bot.pathfinder.goto(new GoalNear(x, y, z, 3)).catch(err => { });
+        return await ai.chat("System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.");
     }
     else if (!add) return bot.pathfinder.setGoal(null);
     else {

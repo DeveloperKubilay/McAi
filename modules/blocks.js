@@ -1,30 +1,23 @@
 var bot = null, ai = null
+const Vec3 = require('vec3');
+const { GoalBlock } = require('mineflayer-pathfinder').goals;
 
 module.exports = async function (...args) {
     if (args[4] === true)  [bot, ai] = args;
     let itemname = args[0];
-
-    
-
-
-
-
-
     itemname = String(itemname || "");
-    
-    if (!itemname) return { status: false, message: "Yo! Ne aramam gerek söylemedin! 🤔" };
+    if (!itemname) return;
     
     // Biyom bazlı blok analizi 🌳
     const findBlocksInRadius = async (blockName, radius = 64) => {
         const mcData = require('minecraft-data')(bot.version);
         const blockType = mcData.blocksByName[blockName];
         
-        if (!blockType) return { status: false, message: `${blockName} diye bir blok bulamadım knk 😕` };
+        if (!blockType) return { status: false, message: `${blockName} diye bir blok bulamadım knk 😕\n\nBazen isim yanlış yazılmış olabiliyor, bi' daha kontrol et. Minecraft blok isimleri için kaynak: https://minecraft.fandom.com/wiki/Biome 🔗` };
         
         console.log(`🔍 ${blockName} bloklarını arıyorum, ${radius} blok yarıçapında...`);
         
         try {
-            // Botu çevreleyen blokları tara
             const blocks = bot.findBlocks({
                 matching: blockType.id,
                 maxDistance: radius,
@@ -32,16 +25,32 @@ module.exports = async function (...args) {
             });
             
             if (blocks.length === 0) {
-                return { status: false, message: `${radius} blok çevrede hiç ${blockName} bulamadım 😢` };
+                return { 
+                    status: false, 
+                    message: `${radius} blok çevrede hiç ${blockName} bulamadım 😢\n\nBelki yanlış biyomdasındır ya da blok yerin altında/gizli olabilir. Başka bir yere bakmayı dene, ya da /tp ile farklı biyomlara ışınlanabilirsin. Kaynak: https://minecraft.fandom.com/wiki/Biome 🌍\n\nMoral bozma, aramaya devam! 🚀`
+                };
             }
-            
+
+            // En yakın bloğu bul
+            const botPos = bot.entity.position;
+            let minDist = Infinity;
+            let nearest = null;
+            for (const pos of blocks) {
+                const dist = botPos.distanceTo(new Vec3(pos.x, pos.y, pos.z));
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = pos;
+                }
+            }
+
             // Bulunan blokları analiz et ve grupla
             const clusters = findBlockClusters(blocks);
-            
+
+            await ai.chat(`Toplam ${blocks.length} adet ${blockName} buldum! 🎯\nEn yakınımda olan: x=${nearest.x}, y=${nearest.y}, z=${nearest.z} (mesafe: ${minDist.toFixed(2)})\nKaynak: https://minecraft.fandom.com/wiki/Biome 🌐`);
             return {
                 status: true,
                 message: `Toplam ${blocks.length} adet ${blockName} buldum! 🎯`,
-                bestLocation: clusters[0],
+                bestLocation: nearest,
                 allLocations: clusters,
                 count: blocks.length
             };
@@ -130,6 +139,21 @@ module.exports = async function (...args) {
         if (result.status) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada)`;
             result.message += `\n\nGenelde şu biyomlarda bulunur: ${biomeSuggestions.join(', ')} 🌲`;
+            // Blok kırma işlemi
+            const targetPos = result.bestLocation;
+            const block = bot.blockAt(new Vec3(targetPos.x, targetPos.y, targetPos.z));
+            if (block) {
+                bot.pathfinder.setGoal(null)
+                try {
+                    await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
+                    await bot.dig(block);
+                    await ai.chat(`Aga bloğu kırdım! 💥\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
+                } catch (err) {
+                    await ai.chat(`Kanka bloğa gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
+                }
+            } else {
+                await ai.chat(`Kanka bloğu buldum ama orada bir şey yok gibi 🤔`);
+            }
         } else {
             result.message += `\n\nBu blok tipini şu biyomlarda aramayı dene: ${biomeSuggestions.join(', ')} 🔍`;
         }
@@ -143,6 +167,21 @@ module.exports = async function (...args) {
         if (result.status) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada)`;
             result.message += `\n\nGenelde şu yerlerde bulunur: ${biomeSuggestions.join(', ')} ⛏️`;
+            // Blok kırma işlemi
+            const targetPos = result.bestLocation;
+            const block = bot.blockAt(new Vec3(targetPos.x, targetPos.y, targetPos.z));
+            if (block) {
+                bot.pathfinder.setGoal(null)
+                try {
+                    await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
+                    await bot.dig(block);
+                    await ai.chat(`Aga cevheri kırdım! 💎\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
+                } catch (err) {
+                    await ai.chat(`Kanka cevhere gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
+                }
+            } else {
+                await ai.chat(`Kanka cevheri buldum ama orada bir şey yok gibi 🤔`);
+            }
         } else {
             result.message += `\n\nBu cevheri şuralarda aramayı dene: ${biomeSuggestions.join(', ')} 💎`;
         }
@@ -153,6 +192,21 @@ module.exports = async function (...args) {
         
         if (result.status && result.bestLocation) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada) 📍`;
+            // Blok kırma işlemi
+            const targetPos = result.bestLocation;
+            const block = bot.blockAt(new Vec3(targetPos.x, targetPos.y, targetPos.z));
+            if (block) {
+                bot.pathfinder.setGoal(null)
+                try {
+                    await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
+                    await bot.dig(block);
+                    await ai.chat(`Aga bloğu kırdım! 💥\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
+                } catch (err) {
+                    await ai.chat(`Kanka bloğa gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
+                }
+            } else {
+                await ai.chat(`Kanka bloğu buldum ama orada bir şey yok gibi 🤔`);
+            }
         }
     }
     
