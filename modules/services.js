@@ -104,7 +104,7 @@ module.exports = async function (bot, ai, userdata) {
     if (collector.type === 'player') {
       const item = collected.getDroppedItem()
       if(!logs[7]) logs[7] = [];
-      logs[7].push(`${collector.username} topladı ${item.count} adet ${item.displayName}`);
+      logs[7].push(`${collector.username}: yerden ${item.count} adet ${item.displayName} başarıyla topladı!`);
     }
   })
   bot.on('entityEat', (entity) => {

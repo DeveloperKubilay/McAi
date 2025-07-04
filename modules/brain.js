@@ -32,7 +32,7 @@ module.exports = async function (...args) {
     else if (action == "sleep") utils.sleep(item);
     else if (action == "addplayer") utils.addPlayer(item.target, item.message);
     else if (action == "give") utils.give(item.target, item.item, item.message.replace(/[^0-9]/g, "") || 1);
-    else if (action === "findBlock") console.log(await blocks(item.target))
+    else if (action === "mine") console.log(await blocks(item.target, item.message))
   });
   console.log("----------------------------\n")
 

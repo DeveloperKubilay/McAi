@@ -33,8 +33,8 @@ module.exports = function (...args) {
             });
         },
         give: async function (target, item, amount = 1) {
-            const nearestPlayer = bot.nearestEntity(entity => entity.type === 'player' && bot.entity.position.distanceTo(entity.position) <= 30 && entity.username === target);
-            if (!nearestPlayer) return await ai.chat("System: Kullanıcı yakınında değil, yanına gelmesini ardından atabileceğini söyleyebilirsin.");
+            const nearestPlayer = bot.nearestEntity(entity => entity.type === 'player' && bot.entity.position.distanceTo(entity.position) <= 5 && entity.username === target);
+            if (!nearestPlayer) return await ai.chat("System: Kullanıcı yakınında değil, yanına gidip tekrar bu komutu kullanmalısın.");
             bot.lookAt(nearestPlayer.position.offset(0, 1.6, 0));
 
             const itemType = bot.registry.itemsByName[item.split(" ").join("_").toLowerCase()];

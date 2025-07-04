@@ -44,9 +44,11 @@ module.exports = async function (ai, data) {
 
     - "give": Bir oyuncuya bir eşya vermek için kullanılır
       Örnek: {"action": "give", "target": "testplayer", "item": "apple", "message":"5x"}
+      Not: Birisi sizden net bir şekilde sayı belirtmediyse o "1x" dir!
+      Önce goto komutu kullan give komutunu kullanma! goto bittiğinde sana sorucak ne yapalım diye o zaman verirsin.
 
-    - "findBlock": Belirli bir blok türünü bulmak için kullanılır
-    Örnek: {"action": "findBlock", "target": "stone"}
+    - "mine": Belirli bir bloğu kazmak veya elde etmek için kullanılır
+    Örnek: {"action": "mine", "target": "oak_log", "message": "4x"}
 
     Kullanılabilir bilgiler:
     - Dünya haritası:  
