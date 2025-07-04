@@ -48,12 +48,15 @@ const config = {
  /* thinkingConfig: {
     thinkingBudget: -1,
   },*/
-  responseMimeType: 'application/json',
-  responseSchema: objectivePrompt
 };
 
 module.exports = function (model, think) {
-  var contents = []
+  var contents = [{
+    role: 'user',
+    parts: [{
+      text: `responseSchema: ${objectivePrompt} responseMimeType: 'application/json'`,
+    }]
+  }]
   return {
     createNewChat: async function () {
       fs.writeFileSync("log.txt", "")

@@ -1,72 +1,37 @@
-USER:valancess's items have changed:(boots: iron_boots)
-valancess's Coordinate: (477.15918690630406, 72, 193.45256193143973)
-System:
-- Day/Night: Day , Time: 1000
-- Your Coordinates: (480, 72, 195), Your Health: 7, Your Food: 0
-- Your Inventory: ["porkchopx3","netherite_swordx1","wheatx63","diamond_pickaxex1","oak_logx3","spruce_doorx1"]
-- Your Equipment: {"mainHand":"wheat","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{valancess,3m,477,72,193}
-
-User infos: {"name":"valancess","message":"arkadaş"}
-=>valancess: selam knka kapıyı atsana sen bana git odun topla bana geri getir
-AI:[
-  {
-    "action": "goto",
-    "target": "477,72,193"
-  },
-  {
-    "action": "record",
-    "target": "oak_log",
-    "message": "Valancess'in odun ihtiyacı var"
-  }
-]
-USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
 USER:Oyun dünyasında olan bitenler:
 ahmet: Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)
 ahmet: 7/20 canım ve 0/20 açlığım var.
 
-AI:[{"action":"goto","target":"477,72,193"},{"action":"give","target":"valancess","item":"spruce_door","message":"Kanka kapı burda."},{"action":"record","target":"valancess","message":"Valancess'e kapıyı verdim şimdi odun toplayacağım"}]
-USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
-AI:[{"action": "noresponse"
-  ,"target": "ahmet"
-  ,"message": "Kanka selam, açsın galiba. Odun toplayıp sana yemek getireyim mi?"}]
-AI:[{"action":"noresponse"
-    ,"target": "ahmet"
-    }]
-USER:Oyun dünyasında olan bitenler:
-valancess topladı 1 adet Spruce Door
+AI:{"action":"noresponse"}
 
-AI:[{"action":"say","target":"valancess","message":"Selam kanka. Tamamdır kapıyı attım, odun toplamaya gidiyorum."},{"action":"record","target":"valancess","message":"Valancess'in istediği odunları topluyorum."},{"action":"goto","target":"477,72,193"}]
-USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
-AI:[{"action":"goto","target":"477,72,193"}]
-USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
-AI:[
-  {
-    "action": "say",
-    "target": "ahmet",
-    "message": "Selam bro, nasılsın?"
-  },
-  {
-    "action": "give",
-    "target": "ahmet",
-    "item": "spruce_door",
-    "message": "Al knk kapı senin olsun."
-  },
-  {
-    "action": "record",
-    "target": "ahmet",
-    "message": "ahmete kapıyı verdim."
-  }
-]
-USER:System: Kullanıcı yakınında değil, yanına gelmesini ardından atabileceğini söyleyebilirsin.
-AI:[{"action":"say","target":"valancess","message":"Knk yanıma gelince kapıyı atarım sana."}]
-USER:Oyun dünyasında olan bitenler:
-ahmet topladı 1 adet Spruce Door
+USER:valancess's items have changed:(mainhand: spruce_door)
+valancess's Coordinate: (468.965352014656, 72, 185.91821010176497)
+System:
+- Day/Night: Day , Time: 1000
+- Your Coordinates: (472, 72, 189), Your Health: 7, Your Food: 0
+- Your Inventory: ["spruce_doorx61","porkchopx3","netherite_swordx1","wheatx63","diamond_pickaxex1","oak_logx3","spruce_doorx64"]
+- Your Equipment: {"mainHand":"wheat","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{valancess,4m,469,72,186}
 
-AI:[
-  {
-    "action": "say",
-    "target": "valancess",
-    "message": "Selam knk, kapıyı yanıma gelince atıcam. Gel de odunları toplayalım."
-  }
-]
+User infos: {"name":"valancess","message":"arkadaş"}
+=>valancess: ac olduğunu görüyorum bana bir kapı ver ardından git 5 tane odun topla gel sana büyük bir yemek vericem
+AI: [{"action": "say", "target":"valancess", "message": "Abi nasılsın? Sağ ol, kapıyı veriyorum hemen."}]
+
+USER:valancess's Coordinate: (468.965352014656, 72, 185.91821010176497)
+System:
+- Day/Night: Day , Time: 1000
+- Your Coordinates: (472, 72, 189), Your Health: 7, Your Food: 0
+- Your Inventory: ["spruce_doorx61","porkchopx3","netherite_swordx1","wheatx63","diamond_pickaxex1","oak_logx3","spruce_doorx64"]
+- Your Equipment: {"mainHand":"wheat","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{valancess,4m,469,72,186}
+
+=>valancess: ver
+AI: [{"action":"give", "target": "valancess", "item": "spruce_door", "message":"1x"}]
+USER:Oyun dünyasında olan bitenler:
+valancess: yerden 1 adet Spruce Door başarıyla topladı!
+
+AI: [{"action":"say", "target":"valancess", "message": "Tamamdır, kapıyı verdim. Şimdi gidip odunları toplayayım sana."}]
+USER:Oyun dünyasında olan bitenler:
+valancess oyundan ayrıldı. (noresponse kullanmak önerilir)
+
+AI: [{"action":"say", "target":"valancess", "message": "Naber knk?"}]
