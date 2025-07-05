@@ -1,7 +1,7 @@
 require('dotenv').config();
 global.c = require('ansi-colors');
 
-async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token = process.env.GEMINI_API_KEY) {
+async function start(config = { model: "gemini_gemini-2.5-flash", token: process.env.GEMINI_API_KEY }, botname = "Bot") {
   const mineflayer = require("mineflayer");
   const kubitdb = require("kubitdb");
   const fs = require("fs");
@@ -31,10 +31,11 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
   userdata.newbot = itsanewbot;
 
   const ai = await require("./ai/ai_hub.js")({
-    type: model.split("_")[0],
-    modelname: model.split("_").slice(1).join("_"),
+    type: config.model.split("_")[0],
+    modelname: config.model.split("_").slice(1).join("_"),
     userdata: userdata,
-    token: token
+    token: config.token,
+    endpoint: config.endpoint // Add endpoint if provided, for Azure support
   });
 
   fs.readdirSync("./modules/").forEach((file) => {
@@ -43,5 +44,5 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
 
 };
 
-start("google_gemma-3-27b-it","ahmet");
-//start("azure_grok-3-mini","Azure")
+start({ model: "google_gemma-3-27b-it", token: process.env.GEMINI_API_KEY }, "ahmet");
+//start({ model: "azure_grok-3-mini", token: process.env.AZURE_API_KEY, endpoint: process.env.AZURE_API_URL }, "Azure")

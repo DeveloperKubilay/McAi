@@ -72,7 +72,7 @@ module.exports = async function (bot, ai, userdata) {
       logs[1] = userdata.name + ": Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)";
   })
   bot.on('health', () => {
-    logs[2] = userdata.name + `: ${bot.health}/20 canım ve ${bot.food}/20 açlığım var.`;
+   //* logs[2] = userdata.name + `: ${bot.health}/20 canım ve ${bot.food}/20 açlığım var.`;
   })
   bot.on('death', () => {
     logs[2] = userdata.name + ": Ben öldüm x.x";
@@ -85,7 +85,7 @@ module.exports = async function (bot, ai, userdata) {
       logs[3] = "Yağmur durdu.";
   })
   bot.on('noteHeard', (block, instrument, pitch) => {
-    logs[4] = userdata.name + `: Bir nota duydum, enstrüman: ${instrument.name}, ton: ${pitch}`;
+   //* logs[4] = userdata.name + `: Bir nota duydum, enstrüman: ${instrument.name}, ton: ${pitch}`;
   })
   bot.on('chestLidMove', (block, isOpen) => {
     const action = isOpen ? 'open' : 'close'
@@ -103,7 +103,7 @@ module.exports = async function (bot, ai, userdata) {
   bot.on('playerCollect', (collector, collected) => {
     if (collector.type === 'player') {
       const item = collected.getDroppedItem()
-      if(!logs[7]) logs[7] = [];
+      if(!logs[7]) logs[7] = [];//*
       logs[7].push(`${collector.username}: yerden ${item.count} adet ${item.displayName} başarıyla topladı!`);
     }
   })
@@ -121,9 +121,9 @@ module.exports = async function (bot, ai, userdata) {
     }
   })
   bot.on('entityCrouch', (entity) => {
-    if (entity.username) logs[10] = `${entity.username} çömeldi.`;
+   //* if (entity.username) logs[10] = `${entity.username} çömeldi.`;
   })
   bot.on('entityUncrouch', (entity) => {
-    if (entity.username) logs[10] = `${entity.username} çömelmeyi bıraktı.`;
+   // if (entity.username) logs[10] = `${entity.username} çömelmeyi bıraktı.`;
   })
 }

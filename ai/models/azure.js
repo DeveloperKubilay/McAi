@@ -27,7 +27,7 @@ module.exports = function (modelConfig, think, objectivePrompt) { // Added objec
       });
       try {
         const response = await axios.post(
-          process.env.AZURE_API_URL, // Use env var or fallback to default
+          modelConfig.endpoint, // Use modelConfig.endpoint for dynamic URL
           {
             messages: contents,
             max_completion_tokens: 6000,
@@ -38,7 +38,7 @@ module.exports = function (modelConfig, think, objectivePrompt) { // Added objec
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.AZURE_API_KEY}`
+              'Authorization': `Bearer ${modelConfig.token}` // Use modelConfig.token for dynamic key
             }
           }
         );
@@ -49,7 +49,7 @@ module.exports = function (modelConfig, think, objectivePrompt) { // Added objec
         console.error(error);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simple retry with delay
         const response = await axios.post( // Retry the request
-          process.env.AZURE_API_URL || "https://mainkt.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview",
+          modelConfig.endpoint || "https://mainkt.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview",
           {
             messages: contents,
             max_completion_tokens: 16000,
@@ -60,7 +60,7 @@ module.exports = function (modelConfig, think, objectivePrompt) { // Added objec
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.AZURE_API_KEY}`
+              'Authorization': `Bearer ${modelConfig.token}`
             }
           }
         );

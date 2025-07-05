@@ -2,7 +2,7 @@ const { GoogleGenAI } = require('@google/genai')
 var socket;
 const fs = require('fs');
 
-module.exports = function (modelConfig, think, objectivePrompt) { // Added objectivePrompt argument
+module.exports = function (modelConfig, think, objectivePrompt) { // modelConfig now includes token and potentially endpoint
   const config = {};
   var contents = []
 
@@ -26,7 +26,7 @@ module.exports = function (modelConfig, think, objectivePrompt) { // Added objec
     createNewChat: async function () {
       fs.writeFileSync("log.txt", "")
       if (!socket) {
-        const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const genAI = new GoogleGenAI({ apiKey: modelConfig.token }); // Use modelConfig.token instead of process.env.GEMINI_API_KEY
         socket = genAI.models
         contents = []
       }
