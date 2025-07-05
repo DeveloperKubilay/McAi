@@ -64,8 +64,8 @@ module.exports = async function (bot, ai, userdata, db) {
             "- Your Inventory: " + (userdata.inventory || "[]") + "\n" +
             "- Your Equipment: " + (userdata.equipment || "[]") + "\n" +
             `- Nearby Mobs: [${nearbyMobs.map(mob =>
-                `{${mob.name},${Math.round(mob.distance)}m,${Math.round(mob.position.x)},${Math.round(mob.position.y)},${Math.round(mob.position.z)}}`
-            ).join(', ') + "\n" || ''}\n`;
+                `{name:${mob.name}, distance:${Math.round(mob.distance)}m, coordinate: ${Math.round(mob.position.x)},${Math.round(mob.position.y)},${Math.round(mob.position.z)}}`
+            ).join(', ') + "]\n" || ''}]\n`;
 
         username = username.toLowerCase()
         if (!ramdb["talk" + username]) {

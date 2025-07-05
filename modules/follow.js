@@ -1,8 +1,10 @@
 const pathfinder = require('mineflayer-pathfinder').pathfinder
 const Movements = require('mineflayer-pathfinder').Movements
 const { GoalFollow, GoalNear } = require('mineflayer-pathfinder').goals
+const Vec3 = require('vec3'); // Import Vec3 for distance calculation
 
 var bot = null, ai = null
+const MAX_DISTANCE = 50; // Maximum distance threshold for pathfinding attempts
 
 module.exports = async function (...args) {
     if (args[4] === true) {
@@ -17,7 +19,16 @@ module.exports = async function (...args) {
     const [add, username] = args;
 
     if (add === "goto") {
-        const [x, y, z] = username.split(",").map(Number)
+        const [x, y, z] = username.split(",").map(Number); // Assuming username is the coordinates string
+        const targetPos = new Vec3(x, y, z);
+        const currentPos = bot.entity.position;
+        const distance = currentPos.distanceTo(targetPos);
+
+        if (distance > MAX_DISTANCE) {
+            await ai.chat(`Bu konum çok uzak, mesafe: ${distance.toFixed(2)} - Gitmiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
+            return; // Skip if too far
+        }
+
         const currentGoal = bot.pathfinder.goal
         if (
             currentGoal &&

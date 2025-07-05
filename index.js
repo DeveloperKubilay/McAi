@@ -43,5 +43,5 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
 
 };
 
-//start("google_gemma-3-27b-it","ahmet");
-start("azure_grok-3-mini","Azure")
+start("google_gemma-3-27b-it","ahmet");
+//start("azure_grok-3-mini","Azure")

@@ -2,53 +2,12 @@ const { GoogleGenAI } = require('@google/genai')
 var socket;
 const fs = require('fs');
 
-const objectivePrompt = {
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "action": {
-        "type": "string",
-        "enum": [
-          "say",
-          "goto",
-          "sleep",
-          "followplayer",
-          "give",
-          "record",
-          "noresponse",
-          "addplayer",
-          "mine"
-        ]
-      },
-      "target": {
-        "type": "string"
-      },
-      "type": {
-        "type": "boolean"
-      },
-      "item": {
-        "type": "string"
-      },
-      "message": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "action",
-      "target"
-    ]
-  }
-}
-
-
-
-module.exports = function (model, think) {
+module.exports = function (modelConfig, think, objectivePrompt) { // Added objectivePrompt argument
   const config = {};
   var contents = []
 
-  if (!model.modelname.includes("gemma")) {
-    config.responseSchema = objectivePrompt;
+  if (!modelConfig.modelname.includes("gemma")) {
+    config.responseSchema = objectivePrompt; // Use passed objectivePrompt
     config.responseMimeType = 'application/json';
     config.thinkingConfig = {
       thinkingBudget: 24576,
@@ -57,7 +16,7 @@ module.exports = function (model, think) {
     contents.push({
       role: 'user',
       parts: [{
-        text: `responseSchema: ${objectivePrompt} responseMimeType: 'application/json'`,
+        text: `responseSchema: ${JSON.stringify(objectivePrompt)} responseMimeType: 'application/json'`, // Use passed objectivePrompt
       }]
     })
   }
@@ -91,7 +50,7 @@ module.exports = function (model, think) {
       if (!socket) await this.createNewChat();
       try {
         const result = await socket.generateContent({
-          model: model.modelname,
+          model: modelConfig.modelname, // Use modelConfig for consistency
           config,
           contents: contents
         });
@@ -100,7 +59,7 @@ module.exports = function (model, think) {
       } catch (error) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const result = await socket.generateContent({
-          model: model.modelname,
+          model: modelConfig.modelname,
           config,
           thinkingConfig: {
             thinkingBudget: 24576,

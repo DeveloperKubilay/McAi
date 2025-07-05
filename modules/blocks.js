@@ -1,6 +1,7 @@
 var bot = null, ai = null
 const Vec3 = require('vec3');
 const { GoalBlock } = require('mineflayer-pathfinder').goals;
+const MAX_DISTANCE = 50; // Maximum distance threshold for pathfinding attempts
 
 module.exports = async function (...args) {
     if (args[4] === true)  [bot, ai] = args;
@@ -145,9 +146,16 @@ module.exports = async function (...args) {
             let blocksBroken = 0;
             for (const cluster of result.allLocations) {
                 if (blocksBroken >= amount) break;
-                const block = bot.blockAt(new Vec3(cluster.x, cluster.y, cluster.z));
+                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
+                const currentPos = bot.entity.position;
+                const distance = currentPos.distanceTo(blockPos);
+                if (distance > MAX_DISTANCE) {
+                    await ai.chat(`Bu blok çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
+                    continue; // Skip this block if too far
+                }
+                const block = bot.blockAt(blockPos);
                 if (block) {
-                    bot.pathfinder.setGoal(null)
+                    bot.pathfinder.setGoal(null);
                     try {
                         await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
                         await bot.dig(block);
@@ -178,9 +186,16 @@ module.exports = async function (...args) {
             let blocksBroken = 0;
             for (const cluster of result.allLocations) {
                 if (blocksBroken >= amount) break;
-                const block = bot.blockAt(new Vec3(cluster.x, cluster.y, cluster.z));
+                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
+                const currentPos = bot.entity.position;
+                const distance = currentPos.distanceTo(blockPos);
+                if (distance > MAX_DISTANCE) {
+                    await ai.chat(`Bu cevher çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
+                    continue; // Skip this block if too far
+                }
+                const block = bot.blockAt(blockPos);
                 if (block) {
-                    bot.pathfinder.setGoal(null)
+                    bot.pathfinder.setGoal(null);
                     try {
                         await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
                         await bot.dig(block);
@@ -208,9 +223,16 @@ module.exports = async function (...args) {
             let blocksBroken = 0;
             for (const cluster of result.allLocations) {
                 if (blocksBroken >= amount) break;
-                const block = bot.blockAt(new Vec3(cluster.x, cluster.y, cluster.z));
+                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
+                const currentPos = bot.entity.position;
+                const distance = currentPos.distanceTo(blockPos);
+                if (distance > MAX_DISTANCE) {
+                    await ai.chat(`Bu blok çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
+                    continue; // Skip this block if too far
+                }
+                const block = bot.blockAt(blockPos);
                 if (block) {
-                    bot.pathfinder.setGoal(null)
+                    bot.pathfinder.setGoal(null);
                     try {
                         await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
                         await bot.dig(block);

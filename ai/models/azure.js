@@ -1,47 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 
-// Add objectivePrompt definition after the require statements
-const objectivePrompt = {
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "action": {
-        "type": "string",
-        "enum": [
-          "say",
-          "goto",
-          "sleep",
-          "followplayer",
-          "give",
-          "record",
-          "noresponse",
-          "addplayer",
-          "mine"
-        ]
-      },
-      "target": {
-        "type": "string"
-      },
-      "type": {
-        "type": "boolean"
-      },
-      "item": {
-        "type": "string"
-      },
-      "message": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "action",
-      "target"
-    ]
-  }
-};
-
-module.exports = function (model, think) {
+module.exports = function (modelConfig, think, objectivePrompt) { // Added objectivePrompt argument
   var contents = [];
 
   return {
@@ -50,7 +10,7 @@ module.exports = function (model, think) {
       // Add system message to enforce schema-based JSON response
       contents.push({
         role: 'system',
-        content: `You are a helpful assistant. Always respond in JSON format according to the following schema: ${JSON.stringify(objectivePrompt)}`
+        content: `You are a helpful assistant. Always respond in JSON format according to the following schema: ${JSON.stringify(objectivePrompt)}` // Use passed objectivePrompt
       });
     },
     justAddContent: function (data) {
@@ -73,7 +33,7 @@ module.exports = function (model, think) {
             max_completion_tokens: 6000,
             temperature: 1,
             top_p: 1,
-            model: model.modelname
+            model: modelConfig.modelname // Use modelConfig for consistency
           },
           {
             headers: {
@@ -95,7 +55,7 @@ module.exports = function (model, think) {
             max_completion_tokens: 16000,
             temperature: 1,
             top_p: 1,
-            model: model.modelname
+            model: modelConfig.modelname
           },
           {
             headers: {
