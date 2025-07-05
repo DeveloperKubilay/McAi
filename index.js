@@ -22,7 +22,7 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
 
   await new Promise((resolve) => bot.once("spawn", resolve));
 
-  const userdata = db.get("players").find(z => z.name == botname.toLowerCase())
+  const userdata = db.get("players").find(z => z.name == botname)
   if (!userdata) return console.log("User not found in db"), process.exit(1);
   userdata.name = botname;
   userdata.inventory = JSON.stringify(basicFunctions.getinv(bot) || [])
@@ -43,4 +43,5 @@ async function start(model = "gemini_gemini-2.5-flash", botname = "Bot", token =
 
 };
 
-start("gemma_gemma-3-27b-it","ahmet");
+//start("google_gemma-3-27b-it","ahmet");
+start("azure_grok-3-mini","Azure")

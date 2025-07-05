@@ -1,8 +1,5 @@
 const { GoogleGenAI } = require('@google/genai')
 var socket;
-
-
-
 const fs = require('fs');
 
 const objectivePrompt = {
@@ -44,16 +41,28 @@ const objectivePrompt = {
   }
 }
 
-const config = {
- /* thinkingConfig: {
-    thinkingBudget: -1,
-  },*/
-  responseMimeType: 'application/json',
-  responseSchema: objectivePrompt
-};
+
 
 module.exports = function (model, think) {
+  const config = {};
   var contents = []
+
+  if (!model.modelname.includes("gemma")) {
+    config.responseSchema = objectivePrompt;
+    config.responseMimeType = 'application/json';
+    config.thinkingConfig = {
+      thinkingBudget: 24576,
+    };
+  } else {
+    contents.push({
+      role: 'user',
+      parts: [{
+        text: `responseSchema: ${objectivePrompt} responseMimeType: 'application/json'`,
+      }]
+    })
+  }
+
+
   return {
     createNewChat: async function () {
       fs.writeFileSync("log.txt", "")
