@@ -101,7 +101,7 @@ module.exports = async function (bot, ai, userdata) {
     logs[6] = `${player.username} oyundan ayrıldı. (noresponse kullanmak önerilir)`;
   })
   bot.on('playerCollect', (collector, collected) => {
-    if (collector.type === 'player') {
+    if (collector.type === 'player' && !bot.isDigging) { // Add check for digging flag
       const item = collected.getDroppedItem()
       if(!logs[7]) logs[7] = [];//*
       logs[7].push(`${collector.username}: yerden ${item.count} adet ${item.displayName} başarıyla topladı!`);

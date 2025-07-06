@@ -213,7 +213,9 @@ async function collectDroppedItem(bot, position) {
 
 // Modify digBlocks to add fallback for individual block digging if cluster center pathfinding fails
 async function digBlocks(bot, blocksResult, amount) {
+    bot.isDigging = true; // Set flag to indicate digging is in progress
     if (!blocksResult.status || !blocksResult.allLocations || blocksResult.allLocations.length === 0) {
+        bot.isDigging = false; // Clear flag if no blocks to dig
         return 0;
     }
     let blocksDug = 0;
@@ -320,5 +322,6 @@ async function digBlocks(bot, blocksResult, amount) {
             }
         }
     }
+    bot.isDigging = false; // Clear flag after digging is complete
     return blocksDug;
 }

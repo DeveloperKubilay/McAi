@@ -1,5 +1,6 @@
 require('dotenv').config();
 global.c = require('ansi-colors');
+const config = require("./config.js");
 
 async function start(config = { model: "gemini_gemini-2.5-flash", token: process.env.GEMINI_API_KEY }, botname = "Bot") {
   const mineflayer = require("mineflayer");
@@ -44,5 +45,13 @@ async function start(config = { model: "gemini_gemini-2.5-flash", token: process
 
 };
 
-start({ model: "google_gemma-3-27b-it", token: process.env.GEMINI_API_KEY }, "ahmet");
+config.forEach(item => {
+  if (!item.name || !item.model || !item.token) {
+    console.error("Invalid configuration item:", item);
+    return;
+  }
+
+  start({ model: item.model, token: item.token, endpoint: item.endpoint }, item.name);
+});
+//start({ model: "google_gemma-3-27b-it", token: process.env.GEMINI_API_KEY }, "ahmet");
 //start({ model: "azure_grok-3-mini", token: process.env.AZURE_API_KEY, endpoint: process.env.AZURE_API_URL }, "Azure")
