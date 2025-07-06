@@ -1,50 +1,43 @@
-USER:valancess's items have changed:(helmet: netherite_helmet)(chestplate: netherite_chestplate)(leggings: netherite_leggings)(boots: netherite_boots)(mainhand: oak_log)(offhand: shield)
-valancess's Coordinate: (482.4224021811404, 75.49390748022948, 179.92470583123205)
-System:
-- Day/Night: Day , Time: 1377
-- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
-- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
-- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
-]
-User infos: {"name":"valancess","message":"arkadaş"}
-=>valancess: demir kaz hadi
 USER:Oyun dünyasında olan bitenler:
 ahmet: Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)
 
-AI: [{"action":"say", "target":"valancess", "message": "Ne var knk?"}]
-AI: [{"action":"say", "target":"valancess", "message": "Ne var knk?"}]
+AI:[{"action":"noresponse" ,"target":""}]
+USER:valancess's items have changed:(mainhand: netherite_sword)
+valancess's Coordinate: (454.85458397777137, 72, 188.52610786658357)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (454, 72, 189), Your Health: 8, Your Food: 0
+- Your Inventory: ["cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"empty","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:1m, coordinate: 455,72,189}]
+]
+User infos: {"name":"valancess","message":"arkadaş"}
+=>valancess: knka elimdeki nasıl
+AI:[{"action":"say","target":"valancess","message":"Oha, ne ara buldun knk? Çok iyi duruyo."}]
+USER:valancess's Coordinate: (454.8544571592386, 72, 188.52604869944497)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (454, 72, 189), Your Health: 8, Your Food: 0
+- Your Inventory: ["cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"empty","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:1m, coordinate: 455,72,189}]
+]
+=>valancess: ne bu
+AI:[{"action":"say","target":"valancess","message":"Netherite kılıç. Knk bu arada, açlıktan ölcem."}]
+USER:Oyun dünyasında olan bitenler:
+valancess: yerden 1 adet Apple başarıyla topladı!
 
-USER:valancess's Coordinate: (482.4224021811404, 75.49390748022948, 179.92470583123205)
-System:
-- Day/Night: Day , Time: 1377
-- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
-- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
-- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
-]
-=>valancess: demir kaz
-AI: [{"action":"say", "target":"valancess", "message": "Ne diyorsun ya? Demir kaz mı? Ben sana demir kaz mı vereyim? Sen kimsin ya?"}]
-USER:valancess's Coordinate: (482.2989807920566, 75.49390748022948, 179.8243332089344)
-System:
-- Day/Night: Day , Time: 1377
-- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
-- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
-- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
-]
-=>valancess: iron kaz
-AI: [{"action":"goto","target":"482,75,180"}]
-USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
-AI:[{"action":"say", "target":"valancess", "message": "Ne demeli kralım? Ne lazım?"}]
+USER:Oyun dünyasında olan bitenler:
+ahmet: yerden 1 adet Apple başarıyla topladı!
 
-USER:valancess's Coordinate: (472.4310608701816, 78.48829224585448, 177.9493332089344)
-System:
-- Day/Night: Day , Time: 1377
-- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
-- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
-- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{name:valancess, distance:28m, coordinate: 472,78,178}]
+AI:[
+  {
+    "action": "say",
+    "target": "valancess",
+    "message": "Kılıçtı knk. Şimdi elma mı aldın?"
+  }
 ]
-=>valancess: altın kazarmısın
-AI:[{"action":"kaz","target":"gold_ore","message":"4x"}]
+AI:[{"action":"say","target":"valancess","message":"Elma işte, açlıktan ölcem zaten."}]
+USER:Oyun dünyasında olan bitenler:
+valancess oyundan ayrıldı. (noresponse kullanmak önerilir)
+
