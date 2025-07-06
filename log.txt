@@ -1,23 +1,50 @@
+USER:valancess's items have changed:(helmet: netherite_helmet)(chestplate: netherite_chestplate)(leggings: netherite_leggings)(boots: netherite_boots)(mainhand: oak_log)(offhand: shield)
+valancess's Coordinate: (482.4224021811404, 75.49390748022948, 179.92470583123205)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
+- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
+]
+User infos: {"name":"valancess","message":"arkadaş"}
+=>valancess: demir kaz hadi
 USER:Oyun dünyasında olan bitenler:
 ahmet: Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)
 
-AI:{"action":"noresponse"}
+AI: [{"action":"say", "target":"valancess", "message": "Ne var knk?"}]
+AI: [{"action":"say", "target":"valancess", "message": "Ne var knk?"}]
 
-USER:valancess's items have changed:(helmet: netherite_helmet)(chestplate: netherite_chestplate)(leggings: netherite_leggings)(boots: netherite_boots)(mainhand: oak_log)(offhand: shield)
-valancess's Coordinate: (486.25500523345465, 72, 166.16266420348467)
+USER:valancess's Coordinate: (482.4224021811404, 75.49390748022948, 179.92470583123205)
 System:
 - Day/Night: Day , Time: 1377
-- Your Coordinates: (490, 72, 163), Your Health: 20, Your Food: 14
-- Your Inventory: []
-- Your Equipment: {"mainHand":"empty","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
-- Nearby Mobs: [{name:valancess, distance:5m, coordinate: 486,72,166}]
+- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
+- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
 ]
-User infos: {"name":"valancess","message":"arkadaş"}
-=>valancess: knka bana bir tane odun toplayı verebilirmisin 2 tane toplarmkısın kaz direk hadi durma
-AI: [{"action":"goto","target":"486,72,166"}]
+=>valancess: demir kaz
+AI: [{"action":"say", "target":"valancess", "message": "Ne diyorsun ya? Demir kaz mı? Ben sana demir kaz mı vereyim? Sen kimsin ya?"}]
+USER:valancess's Coordinate: (482.2989807920566, 75.49390748022948, 179.8243332089344)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
+- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:19m, coordinate: 482,75,180}]
+]
+=>valancess: iron kaz
+AI: [{"action":"goto","target":"482,75,180"}]
 USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
-AI:[{"action":"kaz", "target": "oak_log", "message": "2x"}]
-USER:Oyun dünyasında olan bitenler:
-ahmet: yerden 1 adet Oak Log başarıyla topladı!
+AI:[{"action":"say", "target":"valancess", "message": "Ne demeli kralım? Ne lazım?"}]
 
-AI:[{"action":"say", "target":"valancess", "message": "Abi topladım bi tane odun, daha ne lazım?"}]
+USER:valancess's Coordinate: (472.4310608701816, 78.48829224585448, 177.9493332089344)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (497, 68, 171), Your Health: 10, Your Food: 0
+- Your Inventory: ["oak_logx64","oak_logx2","cooked_beefx1","netherite_axex1","netherite_hoex1","netherite_pickaxex1","netherite_shovelx1"]
+- Your Equipment: {"mainHand":"oak_log","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:28m, coordinate: 472,78,178}]
+]
+=>valancess: altın kazarmısın
+AI:[{"action":"kaz","target":"gold_ore","message":"4x"}]
