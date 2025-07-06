@@ -11,30 +11,28 @@ module.exports = async function (...args) {
     let amount = args[1] || 1;
     if (amount > 64) amount = 64;
     
-    // Biyom bazlı blok analizi 🌳
+    // Modified findBlocksInRadius to return raw block positions
     const findBlocksInRadius = async (blockName, radius = 64) => {
         const mcData = require('minecraft-data')(bot.version);
         const blockType = mcData.blocksByName[blockName];
         
         if (!blockType) return { status: false, message: `${blockName} diye bir blok bulamadım knk 😕\n\nBazen isim yanlış yazılmış olabiliyor, bi' daha kontrol et. Minecraft blok isimleri için kaynak: https://minecraft.fandom.com/wiki/Biome 🔗` };
         
-        console.log(`🔍 ${blockName} bloklarını arıyorum, ${radius} blok yarıçapında...`);
-        
         try {
             const blocks = bot.findBlocks({
                 matching: blockType.id,
                 maxDistance: radius,
-                count: amount // burada amount'u kullanıyoruz
+                count: amount * 10 // Increased count to ensure enough blocks are found for digging
             });
             
             if (blocks.length === 0) {
                 return { 
                     status: false, 
-                    message: `${radius} blok çevrede hiç ${blockName} bulamadım 😢\n\nBelki yanlış biyomdasındır ya da blok yerin altında/gizli olabilir. Başka bir yere bakmayı dene, ya da /tp ile farklı biyomlara ışınlanabilirsin. Kaynak: https://minecraft.fandom.com/wiki/Biome 🌍\n\nMoral bozma, aramaya devam! 🚀`
+                    message: `Hiç ${blockName} bulamadım. Başka yere bakmayı dene.` 
                 };
             }
 
-            // En yakın bloğu bul
+            // Find nearest block
             const botPos = bot.entity.position;
             let minDist = Infinity;
             let nearest = null;
@@ -46,16 +44,16 @@ module.exports = async function (...args) {
                 }
             }
 
-            // Bulunan blokları analiz et ve grupla
+            // Compute clusters for informational purposes
             const clusters = findBlockClusters(blocks);
-
-            await ai.chat(`Toplam ${blocks.length} adet ${blockName} buldum! 🎯\nEn yakınımda olan: x=${nearest.x}, y=${nearest.y}, z=${nearest.z} (mesafe: ${minDist.toFixed(2)})\nKaynak: https://minecraft.fandom.com/wiki/Biome 🌐`);
+            
             return {
                 status: true,
-                message: `Toplam ${blocks.length} adet ${blockName} buldum! 🎯`,
+                message: `Bulundu.`,
                 bestLocation: nearest,
                 allLocations: clusters,
-                count: blocks.length
+                count: blocks.length,
+                blocks: blocks // Add raw blocks array for digging
             };
         } catch (error) {
             console.log(`❌ Hata oluştu: ${error.message}`);
@@ -81,7 +79,7 @@ module.exports = async function (...args) {
             clusters.push({
                 center: pos,
                 blockCount: nearbyBlocks.length,
-                blocks: nearbyBlocks
+                blocks: nearbyBlocks  // Added blocks array
             });
         });
         
@@ -109,6 +107,7 @@ module.exports = async function (...args) {
             y: cluster.center.y,
             z: cluster.center.z,
             count: cluster.blockCount,
+            blocks: cluster.blocks,  // Added blocks array
             density: (cluster.blockCount / (4/3 * Math.PI * Math.pow(clusterRadius, 3))).toFixed(5)
         }));
     };
@@ -132,7 +131,6 @@ module.exports = async function (...args) {
     // İstenilen blok için en iyi lokasyon ve tavsiyeler
     let result = { status: false, message: "" };
     
-    // Özel blok tipleri için tavsiyeler
     if (itemname && (itemname.includes('log') || itemname.includes('wood'))) {
         const specificLog = itemname.split('_')[0] + '_log';
         const biomeSuggestions = biomeProbabilityMap[specificLog] || biomeProbabilityMap['oak_log'];
@@ -140,114 +138,187 @@ module.exports = async function (...args) {
         result = await findBlocksInRadius(itemname, 64);
         
         if (result.status) {
-            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada)`;
+            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
             result.message += `\n\nGenelde şu biyomlarda bulunur: ${biomeSuggestions.join(', ')} 🌲`;
-            // Blok kırma işlemi
-            let blocksBroken = 0;
-            for (const cluster of result.allLocations) {
-                if (blocksBroken >= amount) break;
-                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
-                const currentPos = bot.entity.position;
-                const distance = currentPos.distanceTo(blockPos);
-                if (distance > MAX_DISTANCE) {
-                    await ai.chat(`Bu blok çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
-                    continue; // Skip this block if too far
-                }
-                const block = bot.blockAt(blockPos);
-                if (block) {
-                    bot.pathfinder.setGoal(null);
-                    try {
-                        await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
-                        await bot.dig(block);
-                        blocksBroken++;
-                        await ai.chat(`Aga bloğu kırdım! 💥\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
-                    } catch (err) {
-                        await ai.chat(`Kanka bloğa gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
-                    }
-                }
-            }
-            if (blocksBroken === 0) {
-                await ai.chat(`Kanka bloğu buldum ama orada bir şey yok gibi 🤔`);
+            let dug = await digBlocks(bot, result, amount);
+            if (dug > 0) {
+                result.message += `\nBaşarıyla ${dug} blok kazıldı.`;
+            } else {
+                result.message += `\nHiç blok kazılamadı. Birden fazla küme denendi.`;
             }
         } else {
             result.message += `\n\nBu blok tipini şu biyomlarda aramayı dene: ${biomeSuggestions.join(', ')} 🔍`;
         }
-    }
-    // Cevher blokları için
-    else if (itemname && itemname.includes('ore')) {
+    } else if (itemname && itemname.includes('ore')) {
         const biomeSuggestions = biomeProbabilityMap[itemname] || ['underground', 'caves'];
         
         result = await findBlocksInRadius(itemname, 48);
         
         if (result.status) {
-            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada)`;
+            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
             result.message += `\n\nGenelde şu yerlerde bulunur: ${biomeSuggestions.join(', ')} ⛏️`;
-            // Blok kırma işlemi
-            let blocksBroken = 0;
-            for (const cluster of result.allLocations) {
-                if (blocksBroken >= amount) break;
-                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
-                const currentPos = bot.entity.position;
-                const distance = currentPos.distanceTo(blockPos);
-                if (distance > MAX_DISTANCE) {
-                    await ai.chat(`Bu cevher çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
-                    continue; // Skip this block if too far
-                }
-                const block = bot.blockAt(blockPos);
-                if (block) {
-                    bot.pathfinder.setGoal(null);
-                    try {
-                        await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
-                        await bot.dig(block);
-                        blocksBroken++;
-                        await ai.chat(`Aga cevheri kırdım! 💎\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
-                    } catch (err) {
-                        await ai.chat(`Kanka cevhere gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
-                    }
-                }
-            }
-            if (blocksBroken === 0) {
-                await ai.chat(`Kanka cevheri buldum ama orada bir şey yok gibi 🤔`);
+            let dug = await digBlocks(bot, result, amount);
+            if (dug > 0) {
+                result.message += `\nBaşarıyla ${dug} blok kazıldı.`;
+            } else {
+                result.message += `\nHiç blok kazılamadı. Birden fazla küme denendi.`;
             }
         } else {
             result.message += `\n\nBu cevheri şuralarda aramayı dene: ${biomeSuggestions.join(', ')} 💎`;
         }
-    }
-    // Diğer tüm blok tipleri için
-    else {
+    } else {
         result = await findBlocksInRadius(itemname, 64);
         
         if (result.status && result.bestLocation) {
-            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (${result.bestLocation.count} blok var burada) 📍`;
-            // Blok kırma işlemi
-            let blocksBroken = 0;
-            for (const cluster of result.allLocations) {
-                if (blocksBroken >= amount) break;
-                const blockPos = new Vec3(cluster.x, cluster.y, cluster.z);
-                const currentPos = bot.entity.position;
-                const distance = currentPos.distanceTo(blockPos);
-                if (distance > MAX_DISTANCE) {
-                    await ai.chat(`Bu blok çok uzak, mesafe: ${distance.toFixed(2)} - Denemiyorum. (Max uzaklık: ${MAX_DISTANCE}) 😕`);
-                    continue; // Skip this block if too far
-                }
-                const block = bot.blockAt(blockPos);
-                if (block) {
-                    bot.pathfinder.setGoal(null);
-                    try {
-                        await bot.pathfinder.goto(new GoalBlock(block.position.x, block.position.y, block.position.z));
-                        await bot.dig(block);
-                        blocksBroken++;
-                        await ai.chat(`Aga bloğu kırdım! 💥\nKaynak: https://minecraft.fandom.com/wiki/Breaking`);
-                    } catch (err) {
-                        await ai.chat(`Kanka bloğa gidemiyorum, yol yok ya da çok uzak 😭 (Kaynak: https://github.com/PrismarineJS/mineflayer-pathfinder)`);
-                    }
-                }
-            }
-            if (blocksBroken === 0) {
-                await ai.chat(`Kanka bloğu buldum ama orada bir şey yok gibi 🤔`);
+            result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
+            let dug = await digBlocks(bot, result, amount);
+            if (dug > 0) {
+                result.message += `\nBaşarıyla ${dug} blok kazıldı.`;
+            } else {
+                result.message += `\nHiç blok kazılamadı.`;
             }
         }
     }
     
     return result;
+}
+
+// Modify collectDroppedItem to add debugging logs for item drop and collection attempts
+async function collectDroppedItem(bot, position) {
+    return new Promise((resolve) => {
+        bot.once('itemDrop', (item) => {
+            console.log(`Item dropped detected at position ${item.position}. Checking if near mined position ${position}.`);
+            if (item.position.distanceSquared(position) < 1) { // Check if drop is near the mined position
+                try {
+                    bot.collectEntity(item, () => {
+                        console.log(`Successfully collected item at ${item.position}.`);
+                        resolve(); // Resolve after successful collection
+                    });
+                } catch (err) {
+                    console.log(`Error collecting entity at position ${position}: ${err.message}. Skipping collection.`);
+                    resolve(); // Resolve without action on error
+                }
+            } else {
+                console.log(`Item at ${item.position} is not near mined position ${position}, skipping collection.`);
+                resolve(); // If not the correct drop, resolve without action
+            }
+        });
+        // Set a timeout to avoid infinite wait, e.g., 5 seconds
+        setTimeout(() => {
+            console.log(`Timeout waiting for item collection at position ${position}.`);
+            resolve();
+        }, 5000);
+    });
+}
+
+// Modify digBlocks to add fallback for individual block digging if cluster center pathfinding fails
+async function digBlocks(bot, blocksResult, amount) {
+    if (!blocksResult.status || !blocksResult.allLocations || blocksResult.allLocations.length === 0) {
+        return 0;
+    }
+    let blocksDug = 0;
+    const botPos = bot.entity.position;
+    const sortedClusters = blocksResult.allLocations.slice().sort((a, b) => {
+        const distA = botPos.distanceTo(new Vec3(a.x, a.y, a.z));
+        const distB = botPos.distanceTo(new Vec3(b.x, b.y, b.z));
+        return distA - distB;
+    });
+    for (const cluster of sortedClusters) {
+        if (blocksDug >= amount) break;
+        const centerPos = new Vec3(cluster.x, cluster.y, cluster.z);
+        if (botPos.distanceTo(centerPos) > MAX_DISTANCE) continue; // Skip if center is too far
+        let reachedCenter = false;
+        // Attempt to pathfind to cluster center with retries
+        let attempts = 0;
+        const maxRetries = 3;
+        while (attempts < maxRetries) {
+            try {
+                await bot.pathfinder.goto(new GoalBlock(cluster.x, cluster.y, cluster.z));
+                reachedCenter = true;
+                break;
+            } catch (err) {
+                attempts++;
+                if (err.message.includes('Took too long')) {
+                    console.log(`Pathfinding timeout to cluster center at (${cluster.x}, ${cluster.y}, ${cluster.z}). Attempt ${attempts}`);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } else {
+                    console.log(`Failed to pathfind to cluster center: ${err.message}`);
+                    break;
+                }
+            }
+        }
+        if (reachedCenter) {
+            // If center reached, dig blocks from current position
+            const currentBotPos = bot.entity.position;
+            const clusterBlocks = cluster.blocks.slice().sort((a, b) => {
+                const distA = currentBotPos.distanceTo(new Vec3(a.x, a.y, a.z));
+                const distB = currentBotPos.distanceTo(new Vec3(b.x, b.y, b.z));
+                return distA - distB;
+            });
+            for (const blockPos of clusterBlocks) {
+                if (blocksDug >= amount) break;
+                const block = bot.blockAt(blockPos);
+                if (!block) continue;
+                const dist = currentBotPos.distanceTo(new Vec3(blockPos.x, blockPos.y, blockPos.z));
+                if (dist > MAX_DISTANCE) continue;
+                if (dist < 1.5) {
+                    try {
+                        await bot.lookAt(block.position); // Added: Make bot look at the block before digging
+                        await bot.dig(block);
+                        await collectDroppedItem(bot, blockPos);
+                        blocksDug++;
+                    } catch (err) {
+                        console.log(`Failed to dig adjacent block at ${blockPos}: ${err.message}`);
+                    }
+                } else {
+                    try {
+                        await bot.pathfinder.goto(new GoalBlock(blockPos.x, blockPos.y, blockPos.z));
+                        await bot.lookAt(block.position); // Added: Make bot look at the block before digging
+                        await bot.dig(block);
+                        await collectDroppedItem(bot, blockPos);
+                        blocksDug++;
+                    } catch (err) {
+                        console.log(`Failed to dig block at ${blockPos}: ${err.message}`);
+                    }
+                }
+            }
+        } else {
+            // Fallback: If center pathfinding failed, try digging each block individually with retries
+            console.log(`Cluster center unreachable at (${cluster.x}, ${cluster.y}, ${cluster.z}), falling back to individual block digging.`);
+            const clusterBlocks = cluster.blocks.slice().sort((a, b) => {
+                const distA = botPos.distanceTo(new Vec3(a.x, a.y, a.z));
+                const distB = botPos.distanceTo(new Vec3(b.x, b.y, b.z));
+                return distA - distB;
+            });
+            for (const blockPos of clusterBlocks) {
+                if (blocksDug >= amount) break;
+                const block = bot.blockAt(blockPos);
+                if (!block) continue;
+                const dist = botPos.distanceTo(new Vec3(blockPos.x, blockPos.y, blockPos.z));
+                if (dist > MAX_DISTANCE) continue;
+                let blockAttempts = 0;
+                const blockMaxRetries = 3;
+                while (blockAttempts < blockMaxRetries) {
+                    try {
+                        await bot.pathfinder.goto(new GoalBlock(blockPos.x, blockPos.y, blockPos.z));
+                        await bot.lookAt(block.position); // Added: Make bot look at the block before digging
+                        await bot.dig(block);
+                        await collectDroppedItem(bot, blockPos);
+                        blocksDug++;
+                        break; // Success, move to next block
+                    } catch (err) {
+                        blockAttempts++;
+                        if (err.message.includes('Took too long')) {
+                            console.log(`Pathfinding timeout for block at ${blockPos}. Attempt ${blockAttempts}`);
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        } else {
+                            console.log(`Failed to dig block at ${blockPos}: ${err.message}`);
+                            break; // Non-timeout error, skip block
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return blocksDug;
 }

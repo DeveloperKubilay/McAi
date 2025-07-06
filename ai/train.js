@@ -16,7 +16,7 @@ const objectivePrompt = {
           "record",
           "noresponse",
           "addplayer",
-          "mine"
+          "kaz"
         ]
       },
       "target": {
@@ -88,8 +88,8 @@ module.exports = {
         Not: Birisi sizden net bir şekilde sayı belirtmediyse o "1x" dir!
         Önce goto komutu kullan give komutunu kullanma! goto bittiğinde sana sorucak ne yapalım diye o zaman verirsin.
 
-      - "mine": Belirli bir bloğu kazmak veya elde etmek için kullanılır
-      Örnek: {"action": "mine", "target": "oak_log", "message": "4x"}
+      - "kaz": Belirli bir bloğu kazmak veya elde etmek için kullanılır
+      Örnek: {"action": "kaz", "target": "oak_log", "message": "4x"}
 
       Kullanılabilir bilgiler:
       - Dünya haritası:  

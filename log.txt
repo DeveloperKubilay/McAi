@@ -1,54 +1,23 @@
 USER:Oyun dünyasında olan bitenler:
 ahmet: Minecraft sunucusuna bağlandım (noresponse kullanmak önerilir)
-ahmet: 20/20 canım ve 20/20 açlığım var.
 
 AI:{"action":"noresponse"}
 
+USER:valancess's items have changed:(helmet: netherite_helmet)(chestplate: netherite_chestplate)(leggings: netherite_leggings)(boots: netherite_boots)(mainhand: oak_log)(offhand: shield)
+valancess's Coordinate: (486.25500523345465, 72, 166.16266420348467)
+System:
+- Day/Night: Day , Time: 1377
+- Your Coordinates: (490, 72, 163), Your Health: 20, Your Food: 14
+- Your Inventory: []
+- Your Equipment: {"mainHand":"empty","offHand":"empty","head":"empty","chest":"empty","legs":"empty","feet":"empty"}
+- Nearby Mobs: [{name:valancess, distance:5m, coordinate: 486,72,166}]
+]
+User infos: {"name":"valancess","message":"arkadaş"}
+=>valancess: knka bana bir tane odun toplayı verebilirmisin 2 tane toplarmkısın kaz direk hadi durma
+AI: [{"action":"goto","target":"486,72,166"}]
+USER:System: Gitmek istediğin yere Ulaştın. Şimdi başka bir eylem yapmak istersen yap, eğer yapmak istediğin eylem yoksa bu mesaja cevap verme.
+AI:[{"action":"kaz", "target": "oak_log", "message": "2x"}]
 USER:Oyun dünyasında olan bitenler:
-valancess çömeldi.
+ahmet: yerden 1 adet Oak Log başarıyla topladı!
 
-AI:noresponse
-
-USER:You have to give it in Json format, don't forget that as an example
-- Single Action: [{"action":"<action>","target":"<target>","message":"<message>"}]
-- Multiple Actions: [{"action":"<action>","target":"<target>","message":"<message>"},{"action":"<action>","target":"<target>","message":"<message>"}]
-
-Don't make such a mistake again and say what you mean in json !c
-Don't write me a message, just write Json, don't write I got it now !
-
-USER:Oyun dünyasında olan bitenler:
-valancess çömelmeyi bıraktı.
-
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne var knk?"}]
-```
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne var knk?"}]
-```
-USER:Oyun dünyasında olan bitenler:
-valancess çömeldi.
-
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne yapıyorsun knk?"}]
-```
-USER:Oyun dünyasında olan bitenler:
-valancess çömelmeyi bıraktı.
-
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne yapıyorsun?"}]
-```
-USER:Oyun dünyasında olan bitenler:
-valancess çömelmeyi bıraktı.
-
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne yapıyorsun?"}]
-```
-USER:Oyun dünyasında olan bitenler:
-valancess çömeldi.
-
-AI:```json
-[{"action": "say", "target": "valancess", "message": "Ne yapıyorsun?"}]
-```
-USER:Oyun dünyasında olan bitenler:
-valancess çömelmeyi bıraktı.
-
+AI:[{"action":"say", "target":"valancess", "message": "Abi topladım bi tane odun, daha ne lazım?"}]

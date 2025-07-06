@@ -63,7 +63,7 @@ module.exports = async function (bot, ai, userdata) {
     logs[1] = userdata.name + `: Spawn noktam sıfırlandı. galiba yatağım kırıldı (noresponse kullanmak önerilir)`;
   })
   bot.on('forcedMove', () => {
-    logs[1] = userdata.name + ": Birisi beni zorla hareket ettirdi. (noresponse kullanmak önerilir)";
+  //*  logs[1] = userdata.name + ": Birisi beni zorla hareket ettirdi. (noresponse kullanmak önerilir)";
   })
   bot.on('spawn', () => {
     if (userdata.newbot)
