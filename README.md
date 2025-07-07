@@ -1,5 +1,7 @@
 # 🤖 Minecraft AI Buddy 🚀
 
+### Example video: https://youtu.be/emajgphgwAc
+
 > **Notice:** Development of this project is currently paused due to insufficient AI performance and high API costs. The project may resume if better support or resources become available.
 
 ## What is this?
