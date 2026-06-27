@@ -53,5 +53,5 @@ config.forEach(item => {
 
   start({ model: item.model, token: item.token, endpoint: item.endpoint }, item.name);
 });
-//start({ model: "google_gemma-3-27b-it", token: process.env.GEMINI_API_KEY }, "ahmet");
+//start({ model: "gemma-4-31b-it", token: process.env.GEMINI_API_KEY, type: "google" }, "ahmet");
 //start({ model: "azure_grok-3-mini", token: process.env.AZURE_API_KEY, endpoint: process.env.AZURE_API_URL }, "Azure")
