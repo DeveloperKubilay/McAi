@@ -18,11 +18,14 @@ module.exports = async function (...args) {
     await ai.chat("You have to give it in Json format, don't forget that as an example\n- Single Action: [{\"action\":\"<action>\",\"target\":\"<target>\",\"message\":\"<message>\"}]\n- Multiple Actions: [{\"action\":\"<action>\",\"target\":\"<target>\",\"message\":\"<message>\"},{\"action\":\"<action>\",\"target\":\"<target>\",\"message\":\"<message>\"}]\n\nDon't make such a mistake again and say what you mean in json !c\nDon't write me a message, just write Json, don't write I got it now !\n")
   }
   console.log("----------------------------\n")
-  json.forEach(async function (item) {
+  for (const item of json) {
     const action = item.action;
     console.log(item)
     if (action == "say" && !params.sayignore) {
-      if(params.whisper) return await bot.whisper(params.whisper, item.message);
+      if(params.whisper) {
+        await bot.whisper(params.whisper, item.message);
+        continue;
+      }
       await bot.chat(item.message);
     } else if (action == "followplayer")
       followSystem(item.type, item.target);
@@ -33,7 +36,7 @@ module.exports = async function (...args) {
     else if (action == "addplayer") utils.addPlayer(item.target, item.message);
     else if (action == "give") utils.give(item.target, item.item, item.message.replace(/[^0-9]/g, "") || 1);
     else if (action === "kaz") console.log(await blocks(item.target, item.message))
-  });
+  }
   console.log("----------------------------\n")
 
 };

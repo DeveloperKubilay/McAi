@@ -44,11 +44,14 @@ module.exports = async function (...args) {
     }
     else if (!add) return bot.pathfinder.setGoal(null);
     else {
-        const target = bot.players[username.toLowerCase()] ? bot.players[username.toLowerCase()].entity : null
+        const targetPlayer = Object.values(bot.players).find((player) =>
+            player?.username?.toLowerCase() === String(username || "").toLowerCase()
+        )
+        const target = targetPlayer?.entity || null
         var success = true
         if (!target) success = false
         try {
-            await bot.pathfinder.setGoal(new GoalFollow(target, 1), true)
+            bot.pathfinder.setGoal(new GoalFollow(target, 1), true)
             return true;
         } catch (err) { success = false };
         if (!success) {

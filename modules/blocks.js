@@ -4,7 +4,10 @@ const { GoalBlock, GoalNear } = require('mineflayer-pathfinder').goals;
 const MAX_DISTANCE = 50; // Maximum distance threshold for pathfinding attempts
 
 module.exports = async function (...args) {
-    if (args[4] === true)  [bot, ai] = args;
+    if (args[4] === true) {
+        [bot, ai] = args;
+        return;
+    }
     let itemname = args[0];
     itemname = String(itemname || "");
     if (!itemname) return;
@@ -157,7 +160,7 @@ module.exports = async function (...args) {
             }
         }
         
-        result = await findBlocksInRadius(itemname, 2, minY, maxY); // Pass minY and maxY
+        result = await findBlocksInRadius(itemname, 32, minY, maxY); // Pass minY and maxY
         
         if (result.status) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
@@ -171,17 +174,15 @@ module.exports = async function (...args) {
         } else {
             // Fallback: Increase radius and retry with y-level adjustment if possible
             result.message += `\n\nBu blok tipini şu biyomlarda aramayı dene: ${biomeSuggestions.join(', ')} 🔍`;
-            if (minY !== null && maxY !== null) {
-                result = await findBlocksInRadius(itemname, 64, minY, maxY); // Larger radius retry
-                if (result.status) {
-                    result.message = `Daha geniş alanda arandı ve bulundu.\n` + result.message;
-                    let dug = await digBlocks(bot, result, amount, itemname); // Pass itemname as blockName
-                    if (dug > 0) {
-                        result.message += `\nBaşarıyla ${dug} blok kazıldı.`;
-                    }
-                } else {
-                    result.message += `\nY-level ${minY} ile ${maxY} arasında başka bir yere gitmeyi dene.`;
+            result = await findBlocksInRadius(itemname, 96, minY, maxY); // Larger radius retry
+            if (result.status) {
+                result.message = `Daha geniş alanda arandı ve bulundu.\n` + result.message;
+                let dug = await digBlocks(bot, result, amount, itemname); // Pass itemname as blockName
+                if (dug > 0) {
+                    result.message += `\nBaşarıyla ${dug} blok kazıldı.`;
                 }
+            } else if (minY !== null && maxY !== null) {
+                result.message += `\nY-level ${minY} ile ${maxY} arasında başka bir yere gitmeyi dene.`;
             }
             result.status = false; // Ensure status remains false if no blocks found
         }
@@ -205,7 +206,7 @@ module.exports = async function (...args) {
             maxY = 64; // Minecraft world height, can be adjusted
         }
         
-        result = await findBlocksInRadius(itemname, 2, minY, maxY); // Initial search with y-filter
+        result = await findBlocksInRadius(itemname, 32, minY, maxY); // Initial search with y-filter
         
         if (result.status) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
@@ -254,7 +255,7 @@ module.exports = async function (...args) {
             result.status = false; // Ensure status remains false if no blocks found
         }
     } else {
-        result = await findBlocksInRadius(itemname, 2); // No y-level for non-ore/wood blocks
+        result = await findBlocksInRadius(itemname, 16); // No y-level for non-ore/wood blocks
         
         if (result.status && result.bestLocation) {
             result.message += `\n\nEn iyi lokasyon: x=${result.bestLocation.x}, y=${result.bestLocation.y}, z=${result.bestLocation.z} (toplam ${result.count} blok bulundu)`;
@@ -307,6 +308,21 @@ async function collectDroppedItem(bot, blockPosition) {
         console.log(`[DEBUG] No dropped item found near ${blockPosition}.`);
     }
     return false; // Item not collected or not found
+}
+
+async function moveNearBlock(bot, blockPos, range = 2) {
+    await bot.pathfinder.goto(new GoalNear(blockPos.x, blockPos.y, blockPos.z, range));
+}
+
+function findBlocksByName(bot, blockName, amount, radius = 96) {
+    const mcData = require('minecraft-data')(bot.version);
+    const blockType = mcData.blocksByName[blockName];
+    if (!blockType) return [];
+    return bot.findBlocks({
+        matching: blockType.id,
+        maxDistance: radius,
+        count: amount * 10
+    });
 }
 
 // Yeni yardımcı fonksiyon: uygun kazma veya eşya seç
@@ -372,7 +388,7 @@ async function digBlocks(bot, blocksResult, amount, blockName) {
                 let dugSuccessfully = false;
                 while (attempts < maxRetries) {
                     try {
-                        await bot.pathfinder.goto(new GoalBlock(pos.x, pos.y, pos.z));
+                        await moveNearBlock(bot, pos);
                         await bot.lookAt(block.position);
                         await bot.dig(block);
                         blocksDug++;
@@ -423,7 +439,7 @@ async function digBlocks(bot, blocksResult, amount, blockName) {
                     let dugSuccessfully = false;
                     while (attempts < maxRetries) {
                         try {
-                            await bot.pathfinder.goto(new GoalBlock(blockPos.x, blockPos.y, blockPos.z));
+                            await moveNearBlock(bot, blockPos);
                             await bot.lookAt(block.position);
                             await bot.dig(block);
                             blocksDug++;
@@ -458,9 +474,9 @@ async function digBlocks(bot, blocksResult, amount, blockName) {
         } else if (blocksDug < amount) {
             // Further fallback with larger radius search and path clearing
             console.log(`[DEBUG] Falling back to larger radius search for block ${blockName}. Global attempt ${globalAttempts}.`);
-            const largerRadiusResult = await findBlocksInRadius(blockName, 64);
-            if (largerRadiusResult.status) {
-                const sortedNearestBlocks = largerRadiusResult.blocks.sort((a, b) => botPos.distanceTo(new Vec3(a.x, a.y, a.z)) - botPos.distanceTo(new Vec3(b.x, b.y, b.z))).slice(0, amount - blocksDug);
+            const largerRadiusBlocks = findBlocksByName(bot, blockName, amount - blocksDug, 96);
+            if (largerRadiusBlocks.length > 0) {
+                const sortedNearestBlocks = largerRadiusBlocks.sort((a, b) => botPos.distanceTo(new Vec3(a.x, a.y, a.z)) - botPos.distanceTo(new Vec3(b.x, b.y, b.z))).slice(0, amount - blocksDug);
                 for (const blockPos of sortedNearestBlocks) {
                     if (blocksDug >= amount) {
                         console.log(`[DEBUG] Reached dug amount ${blocksDug} in nearest block loop, breaking.`);
@@ -476,7 +492,7 @@ async function digBlocks(bot, blocksResult, amount, blockName) {
                         let dugSuccessfully = false;
                         while (attempts < maxRetries) {
                             try {
-                                await bot.pathfinder.goto(new GoalBlock(blockPos.x, blockPos.y, blockPos.z));
+                                await moveNearBlock(bot, blockPos);
                                 await bot.lookAt(block.position);
                                 await bot.dig(block);
                                 blocksDug++;
